@@ -1,0 +1,1344 @@
+1. project idea
+
+Build a small e-commerce order system.
+
+User flow:
+
+User registers/login
+User views products
+User adds products to cart
+User places order
+Inventory is reserved
+Payment is processed
+Order is confirmed
+Notification is generated
+If payment fails, stock is released
+
+This gives you real practical understanding of microservices.
+
+2. Microservices
+Service 1: Identity Service
+
+Purpose: User registration, login, JWT token generation.
+
+Concepts covered:
+
+ASP.NET Core Web API
+EF Core
+SQL Server
+JWT
+FluentValidation
+AutoMapper
+MediatR
+Database Per Service
+
+Main APIs:
+
+POST /api/auth/register
+POST /api/auth/login
+GET  /api/auth/profile
+
+Database:
+
+IdentityDb
+- Users
+- Roles
+- RefreshTokens
+
+Service 2: Catalog Service
+
+Purpose: Manage products.
+
+Concepts covered:
+
+ASP.NET Core Web API
+EF Core
+SQL Server
+Redis
+CQRS
+MediatR
+FluentValidation
+AutoMapper
+
+Main APIs:
+
+GET    /api/products
+GET    /api/products/{id}
+POST   /api/products
+PUT    /api/products/{id}
+DELETE /api/products/{id}
+
+Redis use:
+
+Cache product list
+Cache product details
+
+Database:
+
+CatalogDb
+- Products
+- Categories
+Service 3: Cart Service
+
+Purpose: User cart management.
+
+Concepts covered:
+
+ASP.NET Core Web API
+Redis
+JWT
+REST Communication
+
+Main APIs:
+
+GET    /api/cart
+POST   /api/cart/items
+DELETE /api/cart/items/{productId}
+POST   /api/cart/checkout
+
+Storage:
+
+Redis
+Key: cart:{userId}
+
+Why Redis here?
+
+Cart data is temporary
+Fast read/write
+No need for permanent SQL table
+Service 4: Order Service
+
+Purpose: Create and manage orders.
+
+Concepts covered:
+
+ASP.NET Core Web API
+EF Core
+SQL Server
+MediatR
+CQRS
+RabbitMQ
+Saga Pattern
+Event-Driven Architecture
+Event Sourcing
+Distributed Transactions
+Database Per Service
+
+Main APIs:
+
+POST /api/orders
+GET  /api/orders/{id}
+GET  /api/orders/my-orders
+
+Database:
+
+OrderDb
+- Orders
+- OrderItems
+- OrderEvents
+- OutboxMessages
+
+This is the most important service for interviews.
+
+Service 5: Inventory Service
+
+Purpose: Manage stock and reserve products.
+
+Concepts covered:
+
+ASP.NET Core Web API
+EF Core
+SQL Server
+RabbitMQ
+REST Communication
+Distributed Transactions
+
+Main APIs:
+
+GET  /api/inventory/{productId}
+POST /api/inventory/reserve
+POST /api/inventory/release
+
+Database:
+
+InventoryDb
+- Stocks
+- StockReservations
+
+RabbitMQ events consumed:
+
+OrderCreatedEvent
+PaymentFailedEvent
+OrderCancelledEvent
+
+RabbitMQ events published:
+
+StockReservedEvent
+StockRejectedEvent
+StockReleasedEvent
+Service 6: Payment Service
+
+Purpose: Fake payment processing.
+
+Concepts covered:
+
+ASP.NET Core Web API
+EF Core
+SQL Server
+RabbitMQ
+Saga Pattern
+Distributed Transactions
+
+Main APIs:
+
+POST /api/payments/process
+GET  /api/payments/{orderId}
+
+Database:
+
+PaymentDb
+- Payments
+
+RabbitMQ events consumed:
+
+StockReservedEvent
+
+RabbitMQ events published:
+
+PaymentCompletedEvent
+PaymentFailedEvent
+Service 7: Notification Service
+
+Purpose: Send fake email/SMS/log notification.
+
+Concepts covered:
+
+RabbitMQ
+Event-Driven Architecture
+Background Worker Service
+
+No SQL database required in the basic version.
+
+Events consumed:
+
+OrderConfirmedEvent
+PaymentFailedEvent
+OrderCancelledEvent
+
+Output:
+
+Console log
+Email simulation
+SMS simulation
+Service 8: API Gateway
+
+Use YARP as API Gateway.
+
+Purpose:
+
+Single entry point for frontend/client
+Route requests to internal microservices
+Handle JWT validation
+Hide internal service URLs
+
+Example public routes:
+
+/api/auth/*       -> Identity Service
+/api/products/*   -> Catalog Service
+/api/cart/*       -> Cart Service
+/api/orders/*     -> Order Service
+/api/inventory/*  -> Inventory Service
+/api/payments/*   -> Payment Service
+
+Concepts covered:
+
+YARP
+JWT
+REST Communication
+Microservice Routing
+3. Architecture
+Client / Swagger / Frontend
+        |
+        v
+YARP API Gateway
+        |
+        |---------------- Identity Service ---- IdentityDb
+        |
+        |---------------- Catalog Service ----- CatalogDb + Redis
+        |
+        |---------------- Cart Service -------- Redis
+        |
+        |---------------- Order Service ------- OrderDb
+        |
+        |---------------- Inventory Service --- InventoryDb
+        |
+        |---------------- Payment Service ----- PaymentDb
+        |
+        |---------------- Notification Service
+                          ^
+                          |
+                       RabbitMQ
+4. RabbitMQ Event Flow
+Successful order flow
+1. User places order
+2. Order Service saves order as Pending
+3. Order Service publishes OrderCreatedEvent
+4. Inventory Service consumes OrderCreatedEvent
+5. Inventory Service reserves stock
+6. Inventory Service publishes StockReservedEvent
+7. Payment Service consumes StockReservedEvent
+8. Payment Service processes payment
+9. Payment Service publishes PaymentCompletedEvent
+10. Order Service consumes PaymentCompletedEvent
+11. Order status becomes Confirmed
+12. Notification Service sends confirmation message
+Failed payment flow
+1. User places order
+2. Inventory is reserved
+3. Payment fails
+4. Payment Service publishes PaymentFailedEvent
+5. Order Service marks order as Failed
+6. Inventory Service releases reserved stock
+7. Notification Service sends payment failed message
+
+This is where you practically learn Saga Pattern and Distributed Transactions.
+
+5. Concept Mapping
+Concept	Where You Will Use It
+ASP.NET Core Web API	All services
+EF Core	Identity, Catalog, Order, Inventory, Payment
+SQL Server	Separate DB for each service
+JWT	Identity Service and API Gateway
+FluentValidation	Validate commands and request DTOs
+AutoMapper	Entity to DTO mapping
+MediatR	Commands, Queries, Handlers
+RabbitMQ	Service-to-service events
+YARP	API Gateway
+Redis	Product cache and cart storage
+Database Per Service	Every service has own DB
+REST Communication	Gateway to services, some direct internal calls
+Docker	Containerize all services
+Kubernetes	Deploy services, gateway, RabbitMQ, Redis
+Azure	Deploy to Azure Container Apps or AKS
+Saga Pattern	Order, Inventory, Payment coordination
+Event-Driven Architecture	RabbitMQ events
+CQRS	Separate command/query handlers
+Distributed Transactions	Handle without direct cross-service DB transaction
+Event Sourcing	Store order state changes in OrderEvents table
+6. Suggested Solution Structure
+SmartCartMicroservices/
+│
+├── src/
+│   ├── ApiGateway/
+│   │   └── SmartCart.ApiGateway
+│   │
+│   ├── Services/
+│   │   ├── Identity/
+│   │   │   └── SmartCart.Identity.Api
+│   │   │
+│   │   ├── Catalog/
+│   │   │   └── SmartCart.Catalog.Api
+│   │   │
+│   │   ├── Cart/
+│   │   │   └── SmartCart.Cart.Api
+│   │   │
+│   │   ├── Orders/
+│   │   │   └── SmartCart.Orders.Api
+│   │   │
+│   │   ├── Inventory/
+│   │   │   └── SmartCart.Inventory.Api
+│   │   │
+│   │   ├── Payments/
+│   │   │   └── SmartCart.Payments.Api
+│   │   │
+│   │   └── Notifications/
+│   │       └── SmartCart.Notifications.Worker
+│   │
+│   └── BuildingBlocks/
+│       ├── SmartCart.Shared
+│       ├── SmartCart.EventBus
+│       └── SmartCart.MessageContracts
+│
+├── docker-compose.yml
+│
+├── k8s/
+│   ├── gateway-deployment.yaml
+│   ├── identity-deployment.yaml
+│   ├── catalog-deployment.yaml
+│   ├── order-deployment.yaml
+│   ├── inventory-deployment.yaml
+│   ├── payment-deployment.yaml
+│   ├── rabbitmq-deployment.yaml
+│   ├── redis-deployment.yaml
+│   └── sqlserver-deployment.yaml
+│
+└── README.md
+7. Each Service Internal Structure
+
+Use this structure for each main API service:
+
+SmartCart.Orders.Api/
+│
+├── Controllers/
+│
+├── Application/
+│   ├── Commands/
+│   ├── Queries/
+│   ├── Handlers/
+│   ├── Validators/
+│   └── DTOs/
+│
+├── Domain/
+│   ├── Entities/
+│   ├── Enums/
+│   └── Events/
+│
+├── Infrastructure/
+│   ├── Data/
+│   ├── Repositories/
+│   ├── MessageBus/
+│   └── Migrations/
+│
+├── Mapping/
+│   └── MappingProfile.cs
+│
+├── Program.cs
+└── appsettings.json
+8. Main Events
+
+Create shared event contracts:
+
+public record OrderCreatedEvent(
+    Guid OrderId,
+    Guid UserId,
+    List<OrderItemMessage> Items,
+    decimal TotalAmount
+);
+
+public record StockReservedEvent(
+    Guid OrderId,
+    bool IsReserved
+);
+
+public record StockRejectedEvent(
+    Guid OrderId,
+    string Reason
+);
+
+public record PaymentCompletedEvent(
+    Guid OrderId,
+    string TransactionId
+);
+
+public record PaymentFailedEvent(
+    Guid OrderId,
+    string Reason
+);
+
+public record OrderConfirmedEvent(
+    Guid OrderId,
+    Guid UserId
+);
+
+public record OrderCancelledEvent(
+    Guid OrderId,
+    string Reason
+);
+9. Saga Pattern Practical Flow
+
+Use Order Service as Saga Orchestrator.
+
+Order status flow:
+
+Pending
+StockReserved
+PaymentCompleted
+Confirmed
+Failed
+Cancelled
+
+Example:
+
+OrderCreated
+   |
+   v
+Reserve Stock
+   |
+   |-- Success --> Process Payment
+   |                  |
+   |                  |-- Success --> Confirm Order
+   |                  |
+   |                  |-- Failed --> Release Stock + Cancel Order
+   |
+   |-- Failed --> Cancel Order
+
+This is very useful for interviews because you can explain:
+
+We do not use one database transaction across services.
+Each service owns its database.
+We coordinate using events.
+If one step fails, we use compensating action.
+This is called Saga Pattern.
+10. Event Sourcing Simple Version
+
+In Order Service, maintain normal Orders table and also maintain OrderEvents table.
+
+OrderEvents
+- Id
+- OrderId
+- EventType
+- EventData
+- CreatedAt
+
+Example stored events:
+
+OrderCreated
+StockReserved
+PaymentCompleted
+OrderConfirmed
+
+Benefit:
+
+You can rebuild order history.
+You can audit every state change.
+You can explain Event Sourcing in interviews practically.
+11. CQRS Example
+
+In Order Service:
+
+Commands:
+
+CreateOrderCommand
+CancelOrderCommand
+ConfirmOrderCommand
+
+Queries:
+
+GetOrderByIdQuery
+GetUserOrdersQuery
+GetOrderHistoryQuery
+
+Handlers:
+
+CreateOrderCommandHandler
+CancelOrderCommandHandler
+GetOrderByIdQueryHandler
+
+MediatR will send command/query to proper handler.
+
+Example flow:
+
+Controller -> MediatR -> Handler -> Database/EventBus
+12. Docker Setup
+
+Your docker-compose.yml should run:
+
+SQL Server
+Redis
+RabbitMQ
+YARP Gateway
+Identity Service
+Catalog Service
+Cart Service
+Order Service
+Inventory Service
+Payment Service
+Notification Worker
+
+Local development URLs:
+
+Gateway:        http://localhost:5000
+Identity API:   http://localhost:5001
+Catalog API:    http://localhost:5002
+Cart API:       http://localhost:5003
+Order API:      http://localhost:5004
+Inventory API:  http://localhost:5005
+Payment API:    http://localhost:5006
+RabbitMQ UI:    http://localhost:15672
+Redis:          localhost:6379
+SQL Server:     localhost:1433
+13. Kubernetes Practice
+
+Create Kubernetes files for:
+
+Deployment
+Service
+ConfigMap
+Secret
+Ingress
+HorizontalPodAutoscaler
+
+For each service:
+
+identity-deployment.yaml
+catalog-deployment.yaml
+order-deployment.yaml
+inventory-deployment.yaml
+payment-deployment.yaml
+gateway-deployment.yaml
+
+You will learn:
+
+Pods
+Services
+Internal communication
+Environment variables
+Secrets
+Scaling
+Rolling update
+14. Azure Deployment Option
+
+For interview and practical learning, deploy in this order:
+
+Option 1: Azure Container Apps
+Option 2: Azure Kubernetes Service
+
+Use Azure services:
+
+Azure SQL Database
+Azure Cache for Redis
+Azure Container Registry
+Azure Kubernetes Service / Container Apps
+Azure Application Gateway or Ingress
+Azure Key Vault
+Azure Monitor
+15. Development Phases
+Phase 1: Basic Web API
+
+Build:
+
+Identity Service
+Catalog Service
+Order Service
+
+Use:
+
+ASP.NET Core Web API
+EF Core
+SQL Server
+JWT
+FluentValidation
+AutoMapper
+MediatR
+
+Goal:
+
+Login user
+Add products
+Create order
+Phase 2: Microservices Split
+
+Add:
+
+Separate database per service
+YARP API Gateway
+REST communication
+
+Goal:
+
+All requests go through Gateway
+Each service has own database
+No service directly accesses another service database
+Phase 3: Redis and RabbitMQ
+
+Add:
+
+Redis for product cache
+Redis for cart
+RabbitMQ for events
+
+Goal:
+
+OrderCreatedEvent
+StockReservedEvent
+PaymentCompletedEvent
+PaymentFailedEvent
+Phase 4: Saga Pattern
+
+Add:
+
+Order Saga
+Inventory reservation
+Payment success/failure
+Stock release on failure
+
+Goal:
+
+Handle distributed transaction without shared database transaction
+Phase 5: CQRS and Event Sourcing
+
+Add:
+
+Command handlers
+Query handlers
+OrderEvents table
+Order history API
+
+Goal:
+
+Every order state change is stored as event history
+Phase 6: Docker
+
+Add:
+
+Dockerfile for each service
+docker-compose.yml
+
+Goal:
+
+Run full system using one command
+docker compose up --build
+Phase 7: Kubernetes
+
+Add:
+
+Kubernetes deployment files
+Kubernetes services
+ConfigMap
+Secret
+Ingress
+
+Goal:
+
+Deploy all services in local Kubernetes using Docker Desktop or Minikube
+Phase 8: Azure
+
+Deploy to:
+
+Azure Container Registry
+Azure Container Apps or AKS
+Azure SQL
+Azure Redis
+Azure Monitor
+
+Goal:
+
+Cloud-ready microservices deployment
+16. Final Interview Explanation
+
+You can explain this project like this:
+
+I created a SmartCart microservices-based order management system using ASP.NET Core Web API. 
+The system has separate services for Identity, Catalog, Cart, Orders, Inventory, Payments, and Notifications. 
+Each service owns its own SQL Server database, following the Database Per Service pattern. 
+YARP is used as an API Gateway and JWT is used for authentication. 
+Redis is used for cart storage and product caching. 
+RabbitMQ is used for asynchronous communication between services. 
+The order flow uses Saga Pattern to handle distributed transactions between Order, Inventory, and Payment services. 
+CQRS is implemented using MediatR, FluentValidation is used for request validation, and AutoMapper is used for DTO mapping. 
+Docker is used for local containerization, Kubernetes is used for orchestration, and the system can be deployed to Azure using AKS or Azure Container Apps.
+17. Best Project Name for Resume
+
+Use this name:
+
+SmartCart - Microservices Based Order Management System
+
+Resume line:
+
+Built a microservices-based order management system using ASP.NET Core Web API, EF Core, SQL Server, JWT, MediatR, RabbitMQ, Redis, YARP API Gateway, Docker, Kubernetes, and Azure, implementing Saga Pattern, CQRS, Event-Driven Architecture, Database Per Service, and Event Sourcing.
+My suggestion
+
+Start with only these 4 services first:
+
+1. Identity Service
+2. Catalog Service
+3. Cart Service
+4. Order Service
+
+Then add:
+
+5. Inventory Service
+6. Payment Service
+7. Notification Worker
+8. YARP Gateway
+
+This way the project will stay practical and not become too big.
+
+
+
+For learning microservices, you do not need paid tools. I mentioned paid items only because some latest versions/cloud options may need payment in real company/production use.
+
+Paid / limited things and why people use them
+Item	Why use it?	Is it compulsory?	Free option
+AutoMapper v15+	To automatically map Entity to DTO and DTO to Entity	No	Use AutoMapper below v15, or do manual mapping
+MediatR v13+	To implement CQRS cleanly using Commands, Queries, Handlers	No	Use MediatR below v13, or create your own handler classes
+Docker Desktop paid plan	Required only for larger companies using Docker Desktop commercially	No for personal learning	Use Docker Desktop free if personal/small business, or Docker Engine on Linux
+Azure	To deploy project on cloud for production-like experience	No	Use local Docker + Kubernetes/Minikube
+Redis Cloud / Enterprise	Managed Redis without maintaining server	No	Use local Redis Docker container
+RabbitMQ enterprise support/cloud	Managed RabbitMQ/support for production	No	Use local RabbitMQ Docker container
+
+AutoMapper v15+ and MediatR v13+ are the main library changes to remember; their official site says AutoMapper 15+ and MediatR 13+ require commercial licensing, while earlier versions remain under their original open-source licenses. Docker Desktop is free for personal use, education, open-source, and small businesses under Docker’s limits, but larger organizations need a paid subscription. Azure gives free credits/free account options, but real cloud usage can become paid after limits.
+
+
+Yes, you can use PostgreSQL instead of SQL Server for this project.
+
+But one important answer first: not everything is fully free in all cases.
+
+For learning/local development, most things are free. ASP.NET Core/.NET, PostgreSQL, RabbitMQ, Kubernetes, FluentValidation, Npgsql PostgreSQL provider are free/open-source. Docker Desktop is free for personal use, education, open-source, and small businesses, but paid for larger commercial use. Azure has free credits/free tiers, but real deployment can become paid. AutoMapper v15+ and MediatR v13+ moved to commercial licensing, while earlier versions remain under old free open-source licenses.
+
+PostgreSQL Database Per Service Design
+
+Use separate database for each microservice.
+
+identity_db
+catalog_db
+cart_db
+order_db
+inventory_db
+payment_db
+notification_db
+
+Important microservice rule:
+
+Do not create foreign keys between different service databases.
+Use IDs only, like user_id, product_id, order_id.
+Each service owns its own database.
+1. Identity Service DB
+
+Database name:
+
+identity_db
+
+Tables:
+
+users
+roles
+user_roles
+refresh_tokens
+user_login_audits
+users
+CREATE TABLE users (
+    id UUID PRIMARY KEY,
+    full_name VARCHAR(150) NOT NULL,
+    email VARCHAR(150) NOT NULL UNIQUE,
+    password_hash TEXT NOT NULL,
+    phone_number VARCHAR(20),
+    is_active BOOLEAN NOT NULL DEFAULT TRUE,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP
+);
+roles
+CREATE TABLE roles (
+    id UUID PRIMARY KEY,
+    name VARCHAR(100) NOT NULL UNIQUE,
+    description TEXT,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+user_roles
+CREATE TABLE user_roles (
+    id UUID PRIMARY KEY,
+    user_id UUID NOT NULL,
+    role_id UUID NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+refresh_tokens
+CREATE TABLE refresh_tokens (
+    id UUID PRIMARY KEY,
+    user_id UUID NOT NULL,
+    token TEXT NOT NULL,
+    expires_at TIMESTAMP NOT NULL,
+    is_revoked BOOLEAN NOT NULL DEFAULT FALSE,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+user_login_audits
+CREATE TABLE user_login_audits (
+    id UUID PRIMARY KEY,
+    user_id UUID,
+    email VARCHAR(150),
+    ip_address VARCHAR(100),
+    user_agent TEXT,
+    login_status VARCHAR(50) NOT NULL,
+    failure_reason TEXT,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+2. Catalog Service DB
+
+Database name:
+
+catalog_db
+
+Tables:
+
+categories
+products
+product_images
+product_price_history
+categories
+CREATE TABLE categories (
+    id UUID PRIMARY KEY,
+    name VARCHAR(150) NOT NULL,
+    description TEXT,
+    is_active BOOLEAN NOT NULL DEFAULT TRUE,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP
+);
+products
+CREATE TABLE products (
+    id UUID PRIMARY KEY,
+    category_id UUID NOT NULL,
+    name VARCHAR(200) NOT NULL,
+    description TEXT,
+    sku VARCHAR(100) NOT NULL UNIQUE,
+    price NUMERIC(18,2) NOT NULL,
+    is_active BOOLEAN NOT NULL DEFAULT TRUE,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP
+);
+product_images
+CREATE TABLE product_images (
+    id UUID PRIMARY KEY,
+    product_id UUID NOT NULL,
+    image_url TEXT NOT NULL,
+    is_primary BOOLEAN NOT NULL DEFAULT FALSE,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+product_price_history
+CREATE TABLE product_price_history (
+    id UUID PRIMARY KEY,
+    product_id UUID NOT NULL,
+    old_price NUMERIC(18,2),
+    new_price NUMERIC(18,2) NOT NULL,
+    changed_by UUID,
+    changed_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+3. Cart Service DB
+
+For Cart Service, I suggest Redis only, because cart is temporary.
+
+Redis key structure:
+
+cart:{user_id}
+
+Example Redis value:
+
+{
+  "userId": "user-guid",
+  "items": [
+    {
+      "productId": "product-guid",
+      "productName": "Keyboard",
+      "quantity": 2,
+      "unitPrice": 1500
+    }
+  ],
+  "updatedAt": "2026-06-25T10:00:00"
+}
+
+But if you want PostgreSQL also for cart history, then create this DB.
+
+Database name:
+
+cart_db
+
+Tables:
+
+carts
+cart_items
+carts
+CREATE TABLE carts (
+    id UUID PRIMARY KEY,
+    user_id UUID NOT NULL,
+    status VARCHAR(50) NOT NULL DEFAULT 'Active',
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP
+);
+cart_items
+CREATE TABLE cart_items (
+    id UUID PRIMARY KEY,
+    cart_id UUID NOT NULL,
+    product_id UUID NOT NULL,
+    product_name VARCHAR(200) NOT NULL,
+    quantity INT NOT NULL,
+    unit_price NUMERIC(18,2) NOT NULL,
+    total_price NUMERIC(18,2) NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP
+);
+
+For practical microservices learning, use:
+
+Redis for active cart
+PostgreSQL optional for cart checkout history
+
+Redis can be used free locally; Redis Cloud has a free small tier and paid plans beyond that. Redis licensing has changed across versions, so for production you should check the exact Redis version/license you use.
+
+4. Order Service DB
+
+Database name:
+
+order_db
+
+Tables:
+
+orders
+order_items
+order_status_history
+order_events
+outbox_messages
+inbox_messages
+orders
+CREATE TABLE orders (
+    id UUID PRIMARY KEY,
+    user_id UUID NOT NULL,
+    order_number VARCHAR(100) NOT NULL UNIQUE,
+    status VARCHAR(50) NOT NULL,
+    total_amount NUMERIC(18,2) NOT NULL,
+    payment_status VARCHAR(50) NOT NULL DEFAULT 'Pending',
+    inventory_status VARCHAR(50) NOT NULL DEFAULT 'Pending',
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP
+);
+
+Status examples:
+
+Pending
+StockReserved
+PaymentCompleted
+Confirmed
+Cancelled
+Failed
+order_items
+CREATE TABLE order_items (
+    id UUID PRIMARY KEY,
+    order_id UUID NOT NULL,
+    product_id UUID NOT NULL,
+    product_name VARCHAR(200) NOT NULL,
+    quantity INT NOT NULL,
+    unit_price NUMERIC(18,2) NOT NULL,
+    total_price NUMERIC(18,2) NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+order_status_history
+CREATE TABLE order_status_history (
+    id UUID PRIMARY KEY,
+    order_id UUID NOT NULL,
+    old_status VARCHAR(50),
+    new_status VARCHAR(50) NOT NULL,
+    reason TEXT,
+    changed_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+order_events
+
+This table is for Event Sourcing.
+
+CREATE TABLE order_events (
+    id UUID PRIMARY KEY,
+    order_id UUID NOT NULL,
+    event_type VARCHAR(150) NOT NULL,
+    event_data JSONB NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+Example event types:
+
+OrderCreated
+StockReserved
+PaymentCompleted
+OrderConfirmed
+PaymentFailed
+OrderCancelled
+outbox_messages
+
+This table is for reliable event publishing.
+
+CREATE TABLE outbox_messages (
+    id UUID PRIMARY KEY,
+    event_type VARCHAR(150) NOT NULL,
+    payload JSONB NOT NULL,
+    status VARCHAR(50) NOT NULL DEFAULT 'Pending',
+    retry_count INT NOT NULL DEFAULT 0,
+    error_message TEXT,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    processed_at TIMESTAMP
+);
+inbox_messages
+
+This table prevents duplicate event processing.
+
+CREATE TABLE inbox_messages (
+    id UUID PRIMARY KEY,
+    message_id UUID NOT NULL UNIQUE,
+    event_type VARCHAR(150) NOT NULL,
+    processed_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+5. Inventory Service DB
+
+Database name:
+
+inventory_db
+
+Tables:
+
+stocks
+stock_reservations
+stock_movements
+inbox_messages
+outbox_messages
+stocks
+CREATE TABLE stocks (
+    id UUID PRIMARY KEY,
+    product_id UUID NOT NULL UNIQUE,
+    available_quantity INT NOT NULL,
+    reserved_quantity INT NOT NULL DEFAULT 0,
+    reorder_level INT NOT NULL DEFAULT 0,
+    updated_at TIMESTAMP
+);
+stock_reservations
+CREATE TABLE stock_reservations (
+    id UUID PRIMARY KEY,
+    order_id UUID NOT NULL,
+    product_id UUID NOT NULL,
+    quantity INT NOT NULL,
+    status VARCHAR(50) NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP
+);
+
+Reservation status examples:
+
+Reserved
+Released
+Rejected
+Confirmed
+stock_movements
+CREATE TABLE stock_movements (
+    id UUID PRIMARY KEY,
+    product_id UUID NOT NULL,
+    order_id UUID,
+    movement_type VARCHAR(50) NOT NULL,
+    quantity INT NOT NULL,
+    reason TEXT,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+Movement type examples:
+
+StockAdded
+StockReserved
+StockReleased
+StockDeducted
+inbox_messages
+CREATE TABLE inbox_messages (
+    id UUID PRIMARY KEY,
+    message_id UUID NOT NULL UNIQUE,
+    event_type VARCHAR(150) NOT NULL,
+    processed_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+outbox_messages
+CREATE TABLE outbox_messages (
+    id UUID PRIMARY KEY,
+    event_type VARCHAR(150) NOT NULL,
+    payload JSONB NOT NULL,
+    status VARCHAR(50) NOT NULL DEFAULT 'Pending',
+    retry_count INT NOT NULL DEFAULT 0,
+    error_message TEXT,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    processed_at TIMESTAMP
+);
+6. Payment Service DB
+
+Database name:
+
+payment_db
+
+Tables:
+
+payments
+payment_transactions
+refunds
+inbox_messages
+outbox_messages
+payments
+CREATE TABLE payments (
+    id UUID PRIMARY KEY,
+    order_id UUID NOT NULL UNIQUE,
+    user_id UUID NOT NULL,
+    amount NUMERIC(18,2) NOT NULL,
+    payment_method VARCHAR(50) NOT NULL,
+    status VARCHAR(50) NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP
+);
+
+Payment status examples:
+
+Pending
+Completed
+Failed
+Refunded
+payment_transactions
+CREATE TABLE payment_transactions (
+    id UUID PRIMARY KEY,
+    payment_id UUID NOT NULL,
+    transaction_id VARCHAR(150),
+    gateway_name VARCHAR(100),
+    request_payload JSONB,
+    response_payload JSONB,
+    status VARCHAR(50) NOT NULL,
+    error_message TEXT,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+For mini project, gateway can be fake:
+
+FakePaymentGateway
+refunds
+CREATE TABLE refunds (
+    id UUID PRIMARY KEY,
+    payment_id UUID NOT NULL,
+    order_id UUID NOT NULL,
+    amount NUMERIC(18,2) NOT NULL,
+    reason TEXT,
+    status VARCHAR(50) NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+inbox_messages
+CREATE TABLE inbox_messages (
+    id UUID PRIMARY KEY,
+    message_id UUID NOT NULL UNIQUE,
+    event_type VARCHAR(150) NOT NULL,
+    processed_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+outbox_messages
+CREATE TABLE outbox_messages (
+    id UUID PRIMARY KEY,
+    event_type VARCHAR(150) NOT NULL,
+    payload JSONB NOT NULL,
+    status VARCHAR(50) NOT NULL DEFAULT 'Pending',
+    retry_count INT NOT NULL DEFAULT 0,
+    error_message TEXT,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    processed_at TIMESTAMP
+);
+7. Notification Service DB
+
+Database name:
+
+notification_db
+
+Tables:
+
+notifications
+notification_templates
+inbox_messages
+notifications
+CREATE TABLE notifications (
+    id UUID PRIMARY KEY,
+    user_id UUID,
+    order_id UUID,
+    notification_type VARCHAR(50) NOT NULL,
+    receiver VARCHAR(200),
+    subject VARCHAR(250),
+    message TEXT NOT NULL,
+    status VARCHAR(50) NOT NULL DEFAULT 'Pending',
+    error_message TEXT,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    sent_at TIMESTAMP
+);
+
+Notification type examples:
+
+Email
+SMS
+Push
+Console
+notification_templates
+CREATE TABLE notification_templates (
+    id UUID PRIMARY KEY,
+    template_name VARCHAR(150) NOT NULL UNIQUE,
+    subject VARCHAR(250),
+    body TEXT NOT NULL,
+    is_active BOOLEAN NOT NULL DEFAULT TRUE,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+inbox_messages
+CREATE TABLE inbox_messages (
+    id UUID PRIMARY KEY,
+    message_id UUID NOT NULL UNIQUE,
+    event_type VARCHAR(150) NOT NULL,
+    processed_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+8. API Gateway DB
+
+For YARP API Gateway, no database is required.
+
+API Gateway only handles:
+
+Routing
+JWT validation
+Reverse proxy
+Rate limiting optional
+Logging optional
+
+YARP is Microsoft’s .NET reverse proxy toolkit; use the official dotnet/yarp / microsoft/reverse-proxy project.
+
+| Microservice         | Database           | Tables                                                                                   |
+| -------------------- | ------------------ | ---------------------------------------------------------------------------------------- |
+| Identity Service     | `identity_db`      | users, roles, user_roles, refresh_tokens, user_login_audits                              |
+| Catalog Service      | `catalog_db`       | categories, products, product_images, product_price_history                              |
+| Cart Service         | `cart_db` or Redis | carts, cart_items                                                                        |
+| Order Service        | `order_db`         | orders, order_items, order_status_history, order_events, outbox_messages, inbox_messages |
+| Inventory Service    | `inventory_db`     | stocks, stock_reservations, stock_movements, outbox_messages, inbox_messages             |
+| Payment Service      | `payment_db`       | payments, payment_transactions, refunds, outbox_messages, inbox_messages                 |
+| Notification Service | `notification_db`  | notifications, notification_templates, inbox_messages                                    |
+| API Gateway          | No DB              | Not required                                                                             |
+
+| Tool / Concept          |             Free or Paid? | Notes                                                                                                                                           |
+| ----------------------- | ------------------------: | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| ASP.NET Core Web API    |                      Free | .NET is free/open-source. ([Microsoft][1])                                                                                                      |
+| EF Core                 |                      Free | Part of Microsoft open-source .NET ecosystem. ([Microsoft][2])                                                                                  |
+| PostgreSQL              |                      Free | Open-source PostgreSQL license. ([PostgreSQL][3])                                                                                               |
+| Npgsql EF Core Provider |                      Free | Open-source PostgreSQL EF Core provider. ([GitHub][4])                                                                                          |
+| JWT                     |                      Free | JWT is a standard; implementation libraries are generally free.                                                                                 |
+| FluentValidation        |                      Free | Apache 2.0 license. ([GitHub][5])                                                                                                               |
+| AutoMapper              |           Not always free | v15+ requires license; older versions remain under old OSS licenses. ([automapper.io][6])                                                       |
+| MediatR                 |           Not always free | v13+ moved to licensing model; earlier versions remain under old OSS licenses. ([automapper.io][6])                                             |
+| RabbitMQ                |                      Free | RabbitMQ is free and open-source; enterprise support is paid. ([rabbitmq.com][7])                                                               |
+| Redis                   | Free locally / paid cloud | Local/community use can be free; cloud and enterprise plans can be paid. ([Redis][8])                                                           |
+| YARP                    |                      Free | Open-source Microsoft reverse proxy project. ([GitHub][9])                                                                                      |
+| Docker                  |          Free with limits | Docker Desktop is free for personal, education, open-source, and small businesses; paid for larger commercial use. ([Docker Documentation][10]) |
+| Kubernetes              |                      Free | Apache 2.0 license. ([GitHub][11])                                                                                                              |
+| Azure                   |              Limited free | Free credit/free services available; production usage can become paid. ([azure.microsoft.com][12])                                              |
+
+[1]: https://dotnet.microsoft.com/en-us/platform/free?utm_source=chatgpt.com ".NET is free, open source, with no licensing costs"
+[2]: https://dotnet.microsoft.com/en-us/platform/open-source?utm_source=chatgpt.com "NET is open source on GitHub"
+[3]: https://www.postgresql.org/about/licence/?utm_source=chatgpt.com "PostgreSQL: License"
+[4]: https://github.com/npgsql/efcore.pg?utm_source=chatgpt.com "Npgsql Entity Framework Core provider for PostgreSQL"
+[5]: https://github.com/FluentValidation/FluentValidation/blob/main/License.txt?utm_source=chatgpt.com "FluentValidation/License.txt at main"
+[6]: https://automapper.io/?utm_source=chatgpt.com "AutoMapper: The Object-Object Mapper - AutoMapper"
+[7]: https://www.rabbitmq.com/?utm_source=chatgpt.com "RabbitMQ: One broker to queue them all | RabbitMQ"
+[8]: https://redis.io/open-source/?utm_source=chatgpt.com "Open Source"
+[9]: https://github.com/dotnet/yarp?utm_source=chatgpt.com "dotnet/yarp: A toolkit for developing high-performance ..."
+[10]: https://docs.docker.com/subscription/desktop-license/?utm_source=chatgpt.com "Docker Desktop license agreement"
+[11]: https://github.com/kubernetes/kubernetes/blob/master/LICENSE?utm_source=chatgpt.com "kubernetes/LICENSE at master"
+[12]: https://azure.microsoft.com/en-us/pricing/purchase-options/azure-account?utm_source=chatgpt.com "Create Your Azure Free Account Or Pay As You Go"
+
+My Practical Suggestion
+
+For 100% free local learning, use this stack:
+
+ASP.NET Core Web API
+PostgreSQL
+Npgsql EF Core Provider
+JWT
+FluentValidation
+RabbitMQ
+Redis local Docker container
+YARP
+Docker Engine / Docker Desktop personal
+Kubernetes with Docker Desktop or Minikube
+
+For AutoMapper and MediatR:
+
+Use AutoMapper version below 15
+Use MediatR version below 13
+
+or use:
+
+Manual mapping instead of AutoMapper
+Simple custom CQRS handlers instead of MediatR
+
+For Azure:
+
+Use only for final deployment practice.
+Local Docker + Kubernetes is enough for learning microservices.

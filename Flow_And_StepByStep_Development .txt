@@ -1,0 +1,1050 @@
+Below is the step-by-step development plan for your microservices mini project.
+
+Project name:
+
+SmartCart Microservices - Order Management System
+
+Use free stack:
+
+ASP.NET Core Web API
+EF Core
+PostgreSQL
+JWT
+FluentValidation
+RabbitMQ
+Redis
+YARP
+Docker
+Kubernetes
+Manual Mapping
+Custom CQRS Handlers
+Final Microservices List
+1. Identity Service
+2. Catalog Service
+3. Cart Service
+4. Order Service
+5. Inventory Service
+6. Payment Service
+7. Notification Service
+8. API Gateway using YARP
+Development Order
+
+Do not start all services at once. Build in this order:
+
+Step 1  - Create solution structure
+Step 2  - Build Identity Service
+Step 3  - Build Catalog Service
+Step 4  - Build Cart Service
+Step 5  - Build Order Service basic version
+Step 6  - Build Inventory Service
+Step 7  - Build Payment Service
+Step 8  - Add RabbitMQ event communication
+Step 9  - Add Saga flow
+Step 10 - Add Notification Service
+Step 11 - Add YARP API Gateway
+Step 12 - Add Docker Compose
+Step 13 - Add Kubernetes
+Step 14 - Optional Azure deployment
+Step 1: Create Main Solution Structure
+
+Create this structure:
+
+SmartCartMicroservices/
+│
+├── src/
+│   ├── ApiGateway/
+│   │   └── SmartCart.ApiGateway
+│   │
+│   ├── Services/
+│   │   ├── Identity/
+│   │   │   └── SmartCart.Identity.Api
+│   │   │
+│   │   ├── Catalog/
+│   │   │   └── SmartCart.Catalog.Api
+│   │   │
+│   │   ├── Cart/
+│   │   │   └── SmartCart.Cart.Api
+│   │   │
+│   │   ├── Orders/
+│   │   │   └── SmartCart.Orders.Api
+│   │   │
+│   │   ├── Inventory/
+│   │   │   └── SmartCart.Inventory.Api
+│   │   │
+│   │   ├── Payments/
+│   │   │   └── SmartCart.Payments.Api
+│   │   │
+│   │   └── Notifications/
+│   │       └── SmartCart.Notifications.Worker
+│   │
+│   └── BuildingBlocks/
+│       ├── SmartCart.Shared
+│       ├── SmartCart.EventBus
+│       └── SmartCart.MessageContracts
+│
+├── docker-compose.yml
+├── k8s/
+└── README.md
+Step 2: Identity Service
+Purpose
+
+This service handles:
+
+User registration
+User login
+JWT token generation
+Refresh token
+Role management
+Login audit
+
+Database:
+
+identity_db
+
+Tables:
+
+users
+roles
+user_roles
+refresh_tokens
+user_login_audits
+Features to Develop
+2.1 Register User
+
+API:
+
+POST /api/auth/register
+
+Request:
+
+{
+  "fullName": "Yogesh Deshmukh",
+  "email": "yogesh@test.com",
+  "password": "Test@123",
+  "phoneNumber": "9999999999"
+}
+
+Implementation concepts:
+
+ASP.NET Core Web API
+EF Core
+PostgreSQL
+FluentValidation
+Manual Mapping
+Password Hashing
+2.2 Login User
+
+API:
+
+POST /api/auth/login
+
+Request:
+
+{
+  "email": "yogesh@test.com",
+  "password": "Test@123"
+}
+
+Response:
+
+{
+  "accessToken": "jwt-token",
+  "refreshToken": "refresh-token",
+  "expiresAt": "2026-06-25T12:00:00"
+}
+
+Implementation concepts:
+
+JWT
+Refresh Token
+Login Audit
+2.3 Get Profile
+
+API:
+
+GET /api/auth/profile
+
+Header:
+
+Authorization: Bearer jwt-token
+
+Implementation concepts:
+
+JWT Authentication
+Authorize Attribute
+Current User Claims
+2.4 Refresh Token
+
+API:
+
+POST /api/auth/refresh-token
+
+Purpose:
+
+Generate new JWT token using valid refresh token.
+2.5 Logout
+
+API:
+
+POST /api/auth/logout
+
+Purpose:
+
+Revoke refresh token.
+Step 3: Catalog Service
+Purpose
+
+This service manages product data.
+
+Database:
+
+catalog_db
+
+Tables:
+
+categories
+products
+product_images
+product_price_history
+Features to Develop
+3.1 Create Category
+
+API:
+
+POST /api/categories
+
+Request:
+
+{
+  "name": "Electronics",
+  "description": "Electronic products"
+}
+3.2 Get Categories
+
+API:
+
+GET /api/categories
+3.3 Create Product
+
+API:
+
+POST /api/products
+
+Request:
+
+{
+  "categoryId": "category-guid",
+  "name": "Wireless Keyboard",
+  "description": "Bluetooth keyboard",
+  "sku": "KEY-001",
+  "price": 1500
+}
+
+Concepts:
+
+EF Core
+PostgreSQL
+FluentValidation
+Manual Mapping
+3.4 Get Product List
+
+API:
+
+GET /api/products
+
+Add filters:
+
+Search by name
+Filter by category
+Min price
+Max price
+Pagination
+
+Example:
+
+GET /api/products?page=1&pageSize=10&search=keyboard
+3.5 Get Product By Id
+
+API:
+
+GET /api/products/{id}
+3.6 Update Product
+
+API:
+
+PUT /api/products/{id}
+
+Also save price history if price changes.
+
+3.7 Delete Product Soft Delete
+
+API:
+
+DELETE /api/products/{id}
+
+Do not physically delete product. Set:
+
+is_active = false
+3.8 Add Redis Cache
+
+Use Redis for:
+
+Product list cache
+Product details cache
+
+Cache keys:
+
+products:list
+products:{productId}
+
+When product is created/updated/deleted:
+
+Clear product cache
+Step 4: Cart Service
+Purpose
+
+This service manages user cart.
+
+Storage:
+
+Redis
+
+Optional DB:
+
+cart_db
+
+For practical learning, use Redis first.
+
+Features to Develop
+4.1 Add Item To Cart
+
+API:
+
+POST /api/cart/items
+
+Request:
+
+{
+  "productId": "product-guid",
+  "quantity": 2
+}
+
+Flow:
+
+Read user_id from JWT
+Call Catalog Service by REST to get product details
+Store product in Redis cart
+
+Concepts:
+
+JWT
+Redis
+REST Communication
+4.2 Get My Cart
+
+API:
+
+GET /api/cart
+
+Response:
+
+{
+  "userId": "user-guid",
+  "items": [
+    {
+      "productId": "product-guid",
+      "productName": "Wireless Keyboard",
+      "quantity": 2,
+      "unitPrice": 1500,
+      "totalPrice": 3000
+    }
+  ],
+  "cartTotal": 3000
+}
+4.3 Update Cart Item Quantity
+
+API:
+
+PUT /api/cart/items/{productId}
+
+Request:
+
+{
+  "quantity": 3
+}
+4.4 Remove Cart Item
+
+API:
+
+DELETE /api/cart/items/{productId}
+4.5 Clear Cart
+
+API:
+
+DELETE /api/cart
+4.6 Checkout Cart
+
+API:
+
+POST /api/cart/checkout
+
+Flow:
+
+Read cart from Redis
+Call Order Service REST API
+Create order
+Clear cart after successful order creation
+
+At first, use REST. Later, order process will use RabbitMQ.
+
+Step 5: Order Service Basic Version
+Purpose
+
+This service creates and manages orders.
+
+Database:
+
+order_db
+
+Tables:
+
+orders
+order_items
+order_status_history
+order_events
+outbox_messages
+inbox_messages
+Features to Develop
+5.1 Create Order
+
+API:
+
+POST /api/orders
+
+Request:
+
+{
+  "items": [
+    {
+      "productId": "product-guid",
+      "productName": "Wireless Keyboard",
+      "quantity": 2,
+      "unitPrice": 1500
+    }
+  ]
+}
+
+Initial status:
+
+Pending
+
+Save data into:
+
+orders
+order_items
+order_status_history
+order_events
+5.2 Get Order By Id
+
+API:
+
+GET /api/orders/{id}
+5.3 Get My Orders
+
+API:
+
+GET /api/orders/my-orders
+
+Filter by logged-in user.
+
+5.4 Cancel Order
+
+API:
+
+POST /api/orders/{id}/cancel
+
+Only allow cancel if status is:
+
+Pending
+StockReserved
+5.5 Add Custom CQRS
+
+Do not use paid latest MediatR. Create your own simple structure.
+
+Application/
+├── Commands/
+│   ├── CreateOrderCommand.cs
+│   └── CancelOrderCommand.cs
+│
+├── CommandHandlers/
+│   ├── CreateOrderCommandHandler.cs
+│   └── CancelOrderCommandHandler.cs
+│
+├── Queries/
+│   ├── GetOrderByIdQuery.cs
+│   └── GetMyOrdersQuery.cs
+│
+├── QueryHandlers/
+│   ├── GetOrderByIdQueryHandler.cs
+│   └── GetMyOrdersQueryHandler.cs
+│
+└── DTOs/
+    └── OrderDto.cs
+
+Controller should call handler:
+
+Controller -> Command Handler -> Database
+Controller -> Query Handler -> Database
+5.6 Add Event Sourcing Simple Version
+
+For every order change, insert row into:
+
+order_events
+
+Example:
+
+{
+  "eventType": "OrderCreated",
+  "eventData": {
+    "orderId": "order-guid",
+    "status": "Pending",
+    "totalAmount": 3000
+  }
+}
+Step 6: Inventory Service
+Purpose
+
+This service manages product stock.
+
+Database:
+
+inventory_db
+
+Tables:
+
+stocks
+stock_reservations
+stock_movements
+inbox_messages
+outbox_messages
+Features to Develop
+6.1 Add Stock
+
+API:
+
+POST /api/inventory/stocks
+
+Request:
+
+{
+  "productId": "product-guid",
+  "availableQuantity": 100,
+  "reorderLevel": 10
+}
+6.2 Get Product Stock
+
+API:
+
+GET /api/inventory/products/{productId}
+6.3 Update Stock
+
+API:
+
+PUT /api/inventory/products/{productId}
+6.4 Reserve Stock
+
+API:
+
+POST /api/inventory/reserve
+
+Request:
+
+{
+  "orderId": "order-guid",
+  "items": [
+    {
+      "productId": "product-guid",
+      "quantity": 2
+    }
+  ]
+}
+
+Logic:
+
+Check available quantity
+Reduce available quantity
+Increase reserved quantity
+Create stock reservation
+Create stock movement
+6.5 Release Stock
+
+API:
+
+POST /api/inventory/release
+
+Used when payment fails or order is cancelled.
+
+Logic:
+
+Decrease reserved quantity
+Increase available quantity
+Update stock reservation as Released
+Create stock movement
+6.6 Confirm Stock Deduction
+
+API:
+
+POST /api/inventory/confirm
+
+Used after payment success.
+
+Logic:
+
+Decrease reserved quantity
+Mark reservation as Confirmed
+Create stock movement as StockDeducted
+Step 7: Payment Service
+Purpose
+
+This service handles fake payment processing.
+
+Database:
+
+payment_db
+
+Tables:
+
+payments
+payment_transactions
+refunds
+inbox_messages
+outbox_messages
+Features to Develop
+7.1 Process Payment
+
+API:
+
+POST /api/payments/process
+
+Request:
+
+{
+  "orderId": "order-guid",
+  "userId": "user-guid",
+  "amount": 3000,
+  "paymentMethod": "UPI"
+}
+
+For mini project, create fake payment logic:
+
+If amount <= 50000, payment success
+If amount > 50000, payment failed
+
+or
+
+Random success/failure for testing saga
+7.2 Get Payment By Order Id
+
+API:
+
+GET /api/payments/order/{orderId}
+7.3 Refund Payment
+
+API:
+
+POST /api/payments/refund
+
+Request:
+
+{
+  "orderId": "order-guid",
+  "reason": "Order cancelled"
+}
+Step 8: Add RabbitMQ Event Communication
+
+Now connect services using events.
+
+Create Shared Message Contracts
+
+Project:
+
+SmartCart.MessageContracts
+
+Events:
+
+public record OrderCreatedEvent(
+    Guid MessageId,
+    Guid OrderId,
+    Guid UserId,
+    List<OrderItemMessage> Items,
+    decimal TotalAmount
+);
+
+public record StockReservedEvent(
+    Guid MessageId,
+    Guid OrderId,
+    Guid UserId,
+    decimal TotalAmount
+);
+
+public record StockRejectedEvent(
+    Guid MessageId,
+    Guid OrderId,
+    string Reason
+);
+
+public record PaymentCompletedEvent(
+    Guid MessageId,
+    Guid OrderId,
+    string TransactionId
+);
+
+public record PaymentFailedEvent(
+    Guid MessageId,
+    Guid OrderId,
+    string Reason
+);
+
+public record OrderConfirmedEvent(
+    Guid MessageId,
+    Guid OrderId,
+    Guid UserId
+);
+
+public record OrderCancelledEvent(
+    Guid MessageId,
+    Guid OrderId,
+    Guid UserId,
+    string Reason
+);
+
+public record OrderItemMessage(
+    Guid ProductId,
+    string ProductName,
+    int Quantity,
+    decimal UnitPrice
+);
+RabbitMQ Event Flow
+8.1 Order Service Publishes
+
+When order is created:
+
+OrderCreatedEvent
+8.2 Inventory Service Consumes
+
+Inventory Service consumes:
+
+OrderCreatedEvent
+
+Then publishes one of:
+
+StockReservedEvent
+StockRejectedEvent
+8.3 Payment Service Consumes
+
+Payment Service consumes:
+
+StockReservedEvent
+
+Then publishes one of:
+
+PaymentCompletedEvent
+PaymentFailedEvent
+8.4 Order Service Consumes
+
+Order Service consumes:
+
+StockReservedEvent
+StockRejectedEvent
+PaymentCompletedEvent
+PaymentFailedEvent
+
+Then updates order status.
+
+8.5 Notification Service Consumes
+
+Notification Service consumes:
+
+OrderConfirmedEvent
+OrderCancelledEvent
+PaymentFailedEvent
+
+Then creates notification.
+
+Step 9: Add Saga Pattern
+
+Use Order Service as Saga Orchestrator.
+
+Successful Flow
+1. Order Service creates order as Pending
+2. Order Service publishes OrderCreatedEvent
+3. Inventory Service reserves stock
+4. Inventory Service publishes StockReservedEvent
+5. Payment Service processes payment
+6. Payment Service publishes PaymentCompletedEvent
+7. Order Service marks order as Confirmed
+8. Inventory Service confirms stock deduction
+9. Notification Service sends confirmation
+Failed Stock Flow
+1. Order Service creates order as Pending
+2. Inventory Service checks stock
+3. Stock not available
+4. Inventory Service publishes StockRejectedEvent
+5. Order Service marks order as Cancelled
+6. Notification Service sends failure notification
+Failed Payment Flow
+1. Order Service creates order as Pending
+2. Inventory Service reserves stock
+3. Payment Service fails payment
+4. Payment Service publishes PaymentFailedEvent
+5. Order Service marks order as Failed
+6. Inventory Service releases stock
+7. Notification Service sends payment failed message
+
+This is your Distributed Transaction practical implementation.
+
+Step 10: Notification Service
+Purpose
+
+This service sends fake email/SMS notifications.
+
+Project type:
+
+ASP.NET Core Worker Service
+
+Database:
+
+notification_db
+
+Tables:
+
+notifications
+notification_templates
+inbox_messages
+Features to Develop
+10.1 Consume Order Confirmed Event
+
+Event:
+
+OrderConfirmedEvent
+
+Action:
+
+Create notification row
+Print message in console
+10.2 Consume Payment Failed Event
+
+Event:
+
+PaymentFailedEvent
+
+Action:
+
+Create payment failed notification
+Print message in console
+10.3 Consume Order Cancelled Event
+
+Event:
+
+OrderCancelledEvent
+
+Action:
+
+Create order cancelled notification
+Print message in console
+Step 11: YARP API Gateway
+Purpose
+
+Gateway is the single entry point.
+
+Project:
+
+SmartCart.ApiGateway
+Features to Develop
+11.1 Route Identity Service
+/api/auth/{**catch-all} -> Identity Service
+11.2 Route Catalog Service
+/api/products/{**catch-all} -> Catalog Service
+/api/categories/{**catch-all} -> Catalog Service
+11.3 Route Cart Service
+/api/cart/{**catch-all} -> Cart Service
+11.4 Route Order Service
+/api/orders/{**catch-all} -> Order Service
+11.5 Route Inventory Service
+/api/inventory/{**catch-all} -> Inventory Service
+11.6 Route Payment Service
+/api/payments/{**catch-all} -> Payment Service
+11.7 Add JWT Validation at Gateway
+
+Gateway should validate token before forwarding secured APIs.
+
+Public APIs:
+
+/api/auth/register
+/api/auth/login
+/api/products
+
+Protected APIs:
+
+/api/cart
+/api/orders
+/api/payments
+/api/inventory
+Step 12: Docker Compose
+
+Create Docker setup for local full system.
+
+Services in docker-compose:
+
+postgres-identity
+postgres-catalog
+postgres-order
+postgres-inventory
+postgres-payment
+postgres-notification
+redis
+rabbitmq
+identity-api
+catalog-api
+cart-api
+order-api
+inventory-api
+payment-api
+notification-worker
+api-gateway
+
+You can start with one PostgreSQL container and multiple databases:
+
+identity_db
+catalog_db
+cart_db
+order_db
+inventory_db
+payment_db
+notification_db
+
+For learning, this is simpler.
+
+Later for real microservices, use separate PostgreSQL server/container per service.
+
+Step 13: Kubernetes
+
+After Docker Compose is working, create Kubernetes files.
+
+For each API:
+
+Deployment
+Service
+ConfigMap
+Secret
+
+For infrastructure:
+
+PostgreSQL Deployment
+Redis Deployment
+RabbitMQ Deployment
+Ingress
+
+Practice these:
+
+Pod
+Deployment
+Service
+ConfigMap
+Secret
+Ingress
+Rolling update
+Scale replicas
+
+Example:
+
+kubectl scale deployment order-api --replicas=3
+Step 14: Optional Azure Deployment
+
+Do this only after local project works.
+
+Azure services:
+
+Azure Container Registry
+Azure Container Apps or AKS
+Azure Database for PostgreSQL
+Azure Cache for Redis
+Azure Monitor
+Azure Key Vault
+
+For learning, local Docker and Kubernetes is enough.
+
+Full Development Checklist
+
+Use this as your working order:
+
+[ ] Create solution and folders
+[ ] Create shared library
+[ ] Create Identity Service
+[ ] Add PostgreSQL to Identity Service
+[ ] Add Register API
+[ ] Add Login API
+[ ] Add JWT
+[ ] Add Refresh Token
+[ ] Create Catalog Service
+[ ] Add Category APIs
+[ ] Add Product APIs
+[ ] Add Redis cache for products
+[ ] Create Cart Service
+[ ] Add Redis cart
+[ ] Add Add-To-Cart API
+[ ] Add Get-Cart API
+[ ] Add Checkout API
+[ ] Create Order Service
+[ ] Add Create Order API
+[ ] Add Get Order API
+[ ] Add Order Events table
+[ ] Add custom CQRS handlers
+[ ] Create Inventory Service
+[ ] Add Stock APIs
+[ ] Add Reserve Stock API
+[ ] Add Release Stock API
+[ ] Create Payment Service
+[ ] Add Fake Payment API
+[ ] Add Refund API
+[ ] Add RabbitMQ publisher
+[ ] Add RabbitMQ consumer
+[ ] Add OrderCreatedEvent
+[ ] Add StockReservedEvent
+[ ] Add PaymentCompletedEvent
+[ ] Add PaymentFailedEvent
+[ ] Add Saga flow
+[ ] Create Notification Worker
+[ ] Add notification event consumers
+[ ] Create YARP API Gateway
+[ ] Add all routes in gateway
+[ ] Add JWT validation in gateway
+[ ] Add Dockerfile for every service
+[ ] Add docker-compose.yml
+[ ] Run full project locally
+[ ] Add Kubernetes YAML files
+[ ] Deploy locally using Kubernetes
+[ ] Optional Azure deployment
+Recommended First Practical Target
+
+First build only this:
+
+Identity Service
+Catalog Service
+Cart Service
+Order Service
+YARP Gateway
+PostgreSQL
+Redis
+
+Then add:
+
+Inventory Service
+Payment Service
+RabbitMQ
+Saga Pattern
+Notification Worker
+Docker
+Kubernetes
+
+This way you will not get confused. Start small, then make it advanced step by step.
