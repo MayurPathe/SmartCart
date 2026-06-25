@@ -3,12 +3,35 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartCart.Shared", "SmartCartMicroservices\src\BuildingBlocks\SmartCart.Shared\SmartCart.Shared.csproj", "{A5CE3280-9CD2-4F79-BF2D-D47A801ADEE9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartCart.MessageContracts", "SmartCartMicroservices\src\BuildingBlocks\SmartCart.MessageContracts\SmartCart.MessageContracts.csproj", "{9F28ED59-8A80-4F64-8E64-3DA706518ED8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartCart.EventBus", "SmartCartMicroservices\src\BuildingBlocks\SmartCart.EventBus\SmartCart.EventBus.csproj", "{39077B60-8A60-48E5-80D9-2047A879C458}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A5CE3280-9CD2-4F79-BF2D-D47A801ADEE9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A5CE3280-9CD2-4F79-BF2D-D47A801ADEE9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A5CE3280-9CD2-4F79-BF2D-D47A801ADEE9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A5CE3280-9CD2-4F79-BF2D-D47A801ADEE9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9F28ED59-8A80-4F64-8E64-3DA706518ED8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9F28ED59-8A80-4F64-8E64-3DA706518ED8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9F28ED59-8A80-4F64-8E64-3DA706518ED8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9F28ED59-8A80-4F64-8E64-3DA706518ED8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{39077B60-8A60-48E5-80D9-2047A879C458}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{39077B60-8A60-48E5-80D9-2047A879C458}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{39077B60-8A60-48E5-80D9-2047A879C458}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{39077B60-8A60-48E5-80D9-2047A879C458}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {7131B15A-B5B5-49A6-A6B5-5BFD1C0B6F81}
 	EndGlobalSection
 EndGlobal
