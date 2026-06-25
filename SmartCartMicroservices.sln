@@ -9,6 +9,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartCart.MessageContracts"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartCart.EventBus", "SmartCartMicroservices\src\BuildingBlocks\SmartCart.EventBus\SmartCart.EventBus.csproj", "{39077B60-8A60-48E5-80D9-2047A879C458}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartCart.ApiGateway", "SmartCartMicroservices\src\ApiGateway\SmartCart.ApiGateway\SmartCart.ApiGateway.csproj", "{FC07FB99-A8D4-4A5D-ACD3-8804E23ED1CD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartCart.Identity.Api", "SmartCartMicroservices\src\Services\Identity\SmartCart.Identity.Api\SmartCart.Identity.Api.csproj", "{63CD4A77-6E82-49DB-8BC4-8E4C8D5E9056}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +31,14 @@ Global
 		{39077B60-8A60-48E5-80D9-2047A879C458}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{39077B60-8A60-48E5-80D9-2047A879C458}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{39077B60-8A60-48E5-80D9-2047A879C458}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FC07FB99-A8D4-4A5D-ACD3-8804E23ED1CD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FC07FB99-A8D4-4A5D-ACD3-8804E23ED1CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FC07FB99-A8D4-4A5D-ACD3-8804E23ED1CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FC07FB99-A8D4-4A5D-ACD3-8804E23ED1CD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{63CD4A77-6E82-49DB-8BC4-8E4C8D5E9056}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{63CD4A77-6E82-49DB-8BC4-8E4C8D5E9056}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{63CD4A77-6E82-49DB-8BC4-8E4C8D5E9056}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{63CD4A77-6E82-49DB-8BC4-8E4C8D5E9056}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
