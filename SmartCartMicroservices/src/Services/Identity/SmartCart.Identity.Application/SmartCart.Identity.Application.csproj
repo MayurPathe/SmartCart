@@ -6,4 +6,9 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\BuildingBlocks\SmartCart.Shared\SmartCart.Shared.csproj" />
+    <ProjectReference Include="..\SmartCart.Identity.Domain\SmartCart.Identity.Domain.csproj" />
+  </ItemGroup>
+
 </Project>

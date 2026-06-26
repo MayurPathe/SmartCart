@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("SmartCart.Shared")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b4a0c5d3623a367bfb2f5c333c0d23e69210ffc9")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+7ff69a8fb3e3a8cde6c169e4be8691f5b5fdbcf5")]
 [assembly: System.Reflection.AssemblyProductAttribute("SmartCart.Shared")]
 [assembly: System.Reflection.AssemblyTitleAttribute("SmartCart.Shared")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\hp\\Source\\Repos\\SmartCart\\SmartCartMicroservices\\src\\Services\\Identity\\SmartCart.Identity.Api\\SmartCart.Identity.Api.csproj": {}
+    "C:\\Users\\hp\\source\\repos\\SmartCart\\SmartCartMicroservices\\src\\Services\\Identity\\SmartCart.Identity.Api\\SmartCart.Identity.Api.csproj": {}
   },
   "projects": {
-    "C:\\Users\\hp\\Source\\Repos\\SmartCart\\SmartCartMicroservices\\src\\Services\\Identity\\SmartCart.Identity.Api\\SmartCart.Identity.Api.csproj": {
+    "C:\\Users\\hp\\source\\repos\\SmartCart\\SmartCartMicroservices\\src\\BuildingBlocks\\SmartCart.Shared\\SmartCart.Shared.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\hp\\Source\\Repos\\SmartCart\\SmartCartMicroservices\\src\\Services\\Identity\\SmartCart.Identity.Api\\SmartCart.Identity.Api.csproj",
-        "projectName": "SmartCart.Identity.Api",
-        "projectPath": "C:\\Users\\hp\\Source\\Repos\\SmartCart\\SmartCartMicroservices\\src\\Services\\Identity\\SmartCart.Identity.Api\\SmartCart.Identity.Api.csproj",
+        "projectUniqueName": "C:\\Users\\hp\\source\\repos\\SmartCart\\SmartCartMicroservices\\src\\BuildingBlocks\\SmartCart.Shared\\SmartCart.Shared.csproj",
+        "projectName": "SmartCart.Shared",
+        "projectPath": "C:\\Users\\hp\\source\\repos\\SmartCart\\SmartCartMicroservices\\src\\BuildingBlocks\\SmartCart.Shared\\SmartCart.Shared.csproj",
         "packagesPath": "C:\\Users\\hp\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\hp\\Source\\Repos\\SmartCart\\SmartCartMicroservices\\src\\Services\\Identity\\SmartCart.Identity.Api\\obj\\",
+        "outputPath": "C:\\Users\\hp\\source\\repos\\SmartCart\\SmartCartMicroservices\\src\\BuildingBlocks\\SmartCart.Shared\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -33,6 +33,96 @@
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "10.0.100"
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "downloadDependencies": [
+            {
+              "name": "Microsoft.AspNetCore.App.Ref",
+              "version": "[8.0.22, 8.0.22]"
+            },
+            {
+              "name": "Microsoft.NETCore.App.Ref",
+              "version": "[8.0.22, 8.0.22]"
+            },
+            {
+              "name": "Microsoft.WindowsDesktop.App.Ref",
+              "version": "[8.0.22, 8.0.22]"
+            }
+          ],
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.100/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "C:\\Users\\hp\\source\\repos\\SmartCart\\SmartCartMicroservices\\src\\Services\\Identity\\SmartCart.Identity.Api\\SmartCart.Identity.Api.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\hp\\source\\repos\\SmartCart\\SmartCartMicroservices\\src\\Services\\Identity\\SmartCart.Identity.Api\\SmartCart.Identity.Api.csproj",
+        "projectName": "SmartCart.Identity.Api",
+        "projectPath": "C:\\Users\\hp\\source\\repos\\SmartCart\\SmartCartMicroservices\\src\\Services\\Identity\\SmartCart.Identity.Api\\SmartCart.Identity.Api.csproj",
+        "packagesPath": "C:\\Users\\hp\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\hp\\source\\repos\\SmartCart\\SmartCartMicroservices\\src\\Services\\Identity\\SmartCart.Identity.Api\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\hp\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {
+              "C:\\Users\\hp\\source\\repos\\SmartCart\\SmartCartMicroservices\\src\\BuildingBlocks\\SmartCart.Shared\\SmartCart.Shared.csproj": {
+                "projectPath": "C:\\Users\\hp\\source\\repos\\SmartCart\\SmartCartMicroservices\\src\\BuildingBlocks\\SmartCart.Shared\\SmartCart.Shared.csproj"
+              },
+              "C:\\Users\\hp\\source\\repos\\SmartCart\\SmartCartMicroservices\\src\\Services\\Identity\\SmartCart.Identity.Application\\SmartCart.Identity.Application.csproj": {
+                "projectPath": "C:\\Users\\hp\\source\\repos\\SmartCart\\SmartCartMicroservices\\src\\Services\\Identity\\SmartCart.Identity.Application\\SmartCart.Identity.Application.csproj"
+              },
+              "C:\\Users\\hp\\source\\repos\\SmartCart\\SmartCartMicroservices\\src\\Services\\Identity\\SmartCart.Identity.Infrastructure\\SmartCart.Identity.Infrastructure.csproj": {
+                "projectPath": "C:\\Users\\hp\\source\\repos\\SmartCart\\SmartCartMicroservices\\src\\Services\\Identity\\SmartCart.Identity.Infrastructure\\SmartCart.Identity.Infrastructure.csproj"
+              }
+            }
           }
         },
         "warningProperties": {
@@ -89,6 +179,263 @@
             "Microsoft.AspNetCore.App": {
               "privateAssets": "none"
             },
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.100/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "C:\\Users\\hp\\source\\repos\\SmartCart\\SmartCartMicroservices\\src\\Services\\Identity\\SmartCart.Identity.Application\\SmartCart.Identity.Application.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\hp\\source\\repos\\SmartCart\\SmartCartMicroservices\\src\\Services\\Identity\\SmartCart.Identity.Application\\SmartCart.Identity.Application.csproj",
+        "projectName": "SmartCart.Identity.Application",
+        "projectPath": "C:\\Users\\hp\\source\\repos\\SmartCart\\SmartCartMicroservices\\src\\Services\\Identity\\SmartCart.Identity.Application\\SmartCart.Identity.Application.csproj",
+        "packagesPath": "C:\\Users\\hp\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\hp\\source\\repos\\SmartCart\\SmartCartMicroservices\\src\\Services\\Identity\\SmartCart.Identity.Application\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\hp\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {
+              "C:\\Users\\hp\\source\\repos\\SmartCart\\SmartCartMicroservices\\src\\BuildingBlocks\\SmartCart.Shared\\SmartCart.Shared.csproj": {
+                "projectPath": "C:\\Users\\hp\\source\\repos\\SmartCart\\SmartCartMicroservices\\src\\BuildingBlocks\\SmartCart.Shared\\SmartCart.Shared.csproj"
+              },
+              "C:\\Users\\hp\\source\\repos\\SmartCart\\SmartCartMicroservices\\src\\Services\\Identity\\SmartCart.Identity.Domain\\SmartCart.Identity.Domain.csproj": {
+                "projectPath": "C:\\Users\\hp\\source\\repos\\SmartCart\\SmartCartMicroservices\\src\\Services\\Identity\\SmartCart.Identity.Domain\\SmartCart.Identity.Domain.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "10.0.100"
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "downloadDependencies": [
+            {
+              "name": "Microsoft.AspNetCore.App.Ref",
+              "version": "[8.0.22, 8.0.22]"
+            },
+            {
+              "name": "Microsoft.NETCore.App.Ref",
+              "version": "[8.0.22, 8.0.22]"
+            },
+            {
+              "name": "Microsoft.WindowsDesktop.App.Ref",
+              "version": "[8.0.22, 8.0.22]"
+            }
+          ],
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.100/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "C:\\Users\\hp\\source\\repos\\SmartCart\\SmartCartMicroservices\\src\\Services\\Identity\\SmartCart.Identity.Domain\\SmartCart.Identity.Domain.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\hp\\source\\repos\\SmartCart\\SmartCartMicroservices\\src\\Services\\Identity\\SmartCart.Identity.Domain\\SmartCart.Identity.Domain.csproj",
+        "projectName": "SmartCart.Identity.Domain",
+        "projectPath": "C:\\Users\\hp\\source\\repos\\SmartCart\\SmartCartMicroservices\\src\\Services\\Identity\\SmartCart.Identity.Domain\\SmartCart.Identity.Domain.csproj",
+        "packagesPath": "C:\\Users\\hp\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\hp\\source\\repos\\SmartCart\\SmartCartMicroservices\\src\\Services\\Identity\\SmartCart.Identity.Domain\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\hp\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "10.0.100"
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "downloadDependencies": [
+            {
+              "name": "Microsoft.AspNetCore.App.Ref",
+              "version": "[8.0.22, 8.0.22]"
+            },
+            {
+              "name": "Microsoft.NETCore.App.Ref",
+              "version": "[8.0.22, 8.0.22]"
+            },
+            {
+              "name": "Microsoft.WindowsDesktop.App.Ref",
+              "version": "[8.0.22, 8.0.22]"
+            }
+          ],
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.100/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "C:\\Users\\hp\\source\\repos\\SmartCart\\SmartCartMicroservices\\src\\Services\\Identity\\SmartCart.Identity.Infrastructure\\SmartCart.Identity.Infrastructure.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\hp\\source\\repos\\SmartCart\\SmartCartMicroservices\\src\\Services\\Identity\\SmartCart.Identity.Infrastructure\\SmartCart.Identity.Infrastructure.csproj",
+        "projectName": "SmartCart.Identity.Infrastructure",
+        "projectPath": "C:\\Users\\hp\\source\\repos\\SmartCart\\SmartCartMicroservices\\src\\Services\\Identity\\SmartCart.Identity.Infrastructure\\SmartCart.Identity.Infrastructure.csproj",
+        "packagesPath": "C:\\Users\\hp\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\hp\\source\\repos\\SmartCart\\SmartCartMicroservices\\src\\Services\\Identity\\SmartCart.Identity.Infrastructure\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\hp\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {
+              "C:\\Users\\hp\\source\\repos\\SmartCart\\SmartCartMicroservices\\src\\BuildingBlocks\\SmartCart.Shared\\SmartCart.Shared.csproj": {
+                "projectPath": "C:\\Users\\hp\\source\\repos\\SmartCart\\SmartCartMicroservices\\src\\BuildingBlocks\\SmartCart.Shared\\SmartCart.Shared.csproj"
+              },
+              "C:\\Users\\hp\\source\\repos\\SmartCart\\SmartCartMicroservices\\src\\Services\\Identity\\SmartCart.Identity.Application\\SmartCart.Identity.Application.csproj": {
+                "projectPath": "C:\\Users\\hp\\source\\repos\\SmartCart\\SmartCartMicroservices\\src\\Services\\Identity\\SmartCart.Identity.Application\\SmartCart.Identity.Application.csproj"
+              },
+              "C:\\Users\\hp\\source\\repos\\SmartCart\\SmartCartMicroservices\\src\\Services\\Identity\\SmartCart.Identity.Domain\\SmartCart.Identity.Domain.csproj": {
+                "projectPath": "C:\\Users\\hp\\source\\repos\\SmartCart\\SmartCartMicroservices\\src\\Services\\Identity\\SmartCart.Identity.Domain\\SmartCart.Identity.Domain.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "10.0.100"
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "downloadDependencies": [
+            {
+              "name": "Microsoft.AspNetCore.App.Ref",
+              "version": "[8.0.22, 8.0.22]"
+            },
+            {
+              "name": "Microsoft.NETCore.App.Ref",
+              "version": "[8.0.22, 8.0.22]"
+            },
+            {
+              "name": "Microsoft.WindowsDesktop.App.Ref",
+              "version": "[8.0.22, 8.0.22]"
+            }
+          ],
+          "frameworkReferences": {
             "Microsoft.NETCore.App": {
               "privateAssets": "all"
             }

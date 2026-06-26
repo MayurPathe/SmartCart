@@ -88,6 +88,55 @@
         "frameworkReferences": [
           "Microsoft.AspNetCore.App"
         ]
+      },
+      "SmartCart.Identity.Application/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v8.0",
+        "dependencies": {
+          "SmartCart.Identity.Domain": "1.0.0",
+          "SmartCart.Shared": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/SmartCart.Identity.Application.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/SmartCart.Identity.Application.dll": {}
+        }
+      },
+      "SmartCart.Identity.Domain/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v8.0",
+        "compile": {
+          "bin/placeholder/SmartCart.Identity.Domain.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/SmartCart.Identity.Domain.dll": {}
+        }
+      },
+      "SmartCart.Identity.Infrastructure/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v8.0",
+        "dependencies": {
+          "SmartCart.Identity.Application": "1.0.0",
+          "SmartCart.Identity.Domain": "1.0.0",
+          "SmartCart.Shared": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/SmartCart.Identity.Infrastructure.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/SmartCart.Identity.Infrastructure.dll": {}
+        }
+      },
+      "SmartCart.Shared/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v8.0",
+        "compile": {
+          "bin/placeholder/SmartCart.Shared.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/SmartCart.Shared.dll": {}
+        }
       }
     }
   },
@@ -439,10 +488,33 @@
         "swashbuckle.aspnetcore.swaggerui.6.6.2.nupkg.sha512",
         "swashbuckle.aspnetcore.swaggerui.nuspec"
       ]
+    },
+    "SmartCart.Identity.Application/1.0.0": {
+      "type": "project",
+      "path": "../SmartCart.Identity.Application/SmartCart.Identity.Application.csproj",
+      "msbuildProject": "../SmartCart.Identity.Application/SmartCart.Identity.Application.csproj"
+    },
+    "SmartCart.Identity.Domain/1.0.0": {
+      "type": "project",
+      "path": "../SmartCart.Identity.Domain/SmartCart.Identity.Domain.csproj",
+      "msbuildProject": "../SmartCart.Identity.Domain/SmartCart.Identity.Domain.csproj"
+    },
+    "SmartCart.Identity.Infrastructure/1.0.0": {
+      "type": "project",
+      "path": "../SmartCart.Identity.Infrastructure/SmartCart.Identity.Infrastructure.csproj",
+      "msbuildProject": "../SmartCart.Identity.Infrastructure/SmartCart.Identity.Infrastructure.csproj"
+    },
+    "SmartCart.Shared/1.0.0": {
+      "type": "project",
+      "path": "../../../BuildingBlocks/SmartCart.Shared/SmartCart.Shared.csproj",
+      "msbuildProject": "../../../BuildingBlocks/SmartCart.Shared/SmartCart.Shared.csproj"
     }
   },
   "projectFileDependencyGroups": {
     "net8.0": [
+      "SmartCart.Identity.Application >= 1.0.0",
+      "SmartCart.Identity.Infrastructure >= 1.0.0",
+      "SmartCart.Shared >= 1.0.0",
       "Swashbuckle.AspNetCore >= 6.6.2"
     ]
   },
@@ -453,11 +525,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\hp\\Source\\Repos\\SmartCart\\SmartCartMicroservices\\src\\Services\\Identity\\SmartCart.Identity.Api\\SmartCart.Identity.Api.csproj",
+      "projectUniqueName": "C:\\Users\\hp\\source\\repos\\SmartCart\\SmartCartMicroservices\\src\\Services\\Identity\\SmartCart.Identity.Api\\SmartCart.Identity.Api.csproj",
       "projectName": "SmartCart.Identity.Api",
-      "projectPath": "C:\\Users\\hp\\Source\\Repos\\SmartCart\\SmartCartMicroservices\\src\\Services\\Identity\\SmartCart.Identity.Api\\SmartCart.Identity.Api.csproj",
+      "projectPath": "C:\\Users\\hp\\source\\repos\\SmartCart\\SmartCartMicroservices\\src\\Services\\Identity\\SmartCart.Identity.Api\\SmartCart.Identity.Api.csproj",
       "packagesPath": "C:\\Users\\hp\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\hp\\Source\\Repos\\SmartCart\\SmartCartMicroservices\\src\\Services\\Identity\\SmartCart.Identity.Api\\obj\\",
+      "outputPath": "C:\\Users\\hp\\source\\repos\\SmartCart\\SmartCartMicroservices\\src\\Services\\Identity\\SmartCart.Identity.Api\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -478,7 +550,17 @@
       "frameworks": {
         "net8.0": {
           "targetAlias": "net8.0",
-          "projectReferences": {}
+          "projectReferences": {
+            "C:\\Users\\hp\\source\\repos\\SmartCart\\SmartCartMicroservices\\src\\BuildingBlocks\\SmartCart.Shared\\SmartCart.Shared.csproj": {
+              "projectPath": "C:\\Users\\hp\\source\\repos\\SmartCart\\SmartCartMicroservices\\src\\BuildingBlocks\\SmartCart.Shared\\SmartCart.Shared.csproj"
+            },
+            "C:\\Users\\hp\\source\\repos\\SmartCart\\SmartCartMicroservices\\src\\Services\\Identity\\SmartCart.Identity.Application\\SmartCart.Identity.Application.csproj": {
+              "projectPath": "C:\\Users\\hp\\source\\repos\\SmartCart\\SmartCartMicroservices\\src\\Services\\Identity\\SmartCart.Identity.Application\\SmartCart.Identity.Application.csproj"
+            },
+            "C:\\Users\\hp\\source\\repos\\SmartCart\\SmartCartMicroservices\\src\\Services\\Identity\\SmartCart.Identity.Infrastructure\\SmartCart.Identity.Infrastructure.csproj": {
+              "projectPath": "C:\\Users\\hp\\source\\repos\\SmartCart\\SmartCartMicroservices\\src\\Services\\Identity\\SmartCart.Identity.Infrastructure\\SmartCart.Identity.Infrastructure.csproj"
+            }
+          }
         }
       },
       "warningProperties": {
