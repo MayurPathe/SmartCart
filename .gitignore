@@ -1,0 +1,19 @@
+# Visual Studio files
+.vs/
+**/.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Build output
+bin/
+obj/
+[Bb]in/
+[Oo]bj/
+
+# Visual Studio index/cache/database
+*.vsidx
+*.db
+*.db-shm
+*.db-wal

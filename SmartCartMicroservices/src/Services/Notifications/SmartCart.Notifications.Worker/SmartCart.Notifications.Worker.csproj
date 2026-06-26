@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Worker">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>dotnet-SmartCart.Notifications.Worker-fc070752-5a71-48a2-aa5a-7c8fbe3ffd71</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\BuildingBlocks\SmartCart.MessageContracts\SmartCart.MessageContracts.csproj" />
+    <ProjectReference Include="..\..\..\BuildingBlocks\SmartCart.Shared\SmartCart.Shared.csproj" />
+    <ProjectReference Include="..\SmartCart.Notifications.Application\SmartCart.Notifications.Application.csproj" />
+    <ProjectReference Include="..\SmartCart.Notifications.Infrastructure\SmartCart.Notifications.Infrastructure.csproj" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\BuildingBlocks\SmartCart.EventBus\SmartCart.EventBus.csproj" />
+    <ProjectReference Include="..\..\..\BuildingBlocks\SmartCart.MessageContracts\SmartCart.MessageContracts.csproj" />
+    <ProjectReference Include="..\..\..\BuildingBlocks\SmartCart.Shared\SmartCart.Shared.csproj" />
+    <ProjectReference Include="..\SmartCart.Orders.Application\SmartCart.Orders.Application.csproj" />
+    <ProjectReference Include="..\SmartCart.Orders.Domain\SmartCart.Orders.Domain.csproj" />
+  </ItemGroup>
+
+</Project>
