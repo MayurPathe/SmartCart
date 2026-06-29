@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("SmartCart.MessageContracts")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+7ff69a8fb3e3a8cde6c169e4be8691f5b5fdbcf5")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+38c1756c97a7078e139c5c4b455b7ed5a746590d")]
 [assembly: System.Reflection.AssemblyProductAttribute("SmartCart.MessageContracts")]
 [assembly: System.Reflection.AssemblyTitleAttribute("SmartCart.MessageContracts")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

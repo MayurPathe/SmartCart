@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="FluentValidation" Version="12.1.1" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\..\BuildingBlocks\SmartCart.MessageContracts\SmartCart.MessageContracts.csproj" />
     <ProjectReference Include="..\..\..\BuildingBlocks\SmartCart.Shared\SmartCart.Shared.csproj" />
     <ProjectReference Include="..\SmartCart.Payments.Domain\SmartCart.Payments.Domain.csproj" />

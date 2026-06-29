@@ -67,6 +67,34 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartCart.Notifications.Dom
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartCart.Notifications.Infrastructure", "SmartCartMicroservices\src\Services\Notifications\SmartCart.Notifications.Infrastructure\SmartCart.Notifications.Infrastructure.csproj", "{2A4E2DEB-B6E1-46B5-8EC6-250939F38AB5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartCart.Identity.Application.Tests", "SmartCartMicroservices\tests\Services\Identity\SmartCart.Identity.Application.Tests\SmartCart.Identity.Application.Tests.csproj", "{CBDD36A2-6949-46E1-BEDA-654F51BAE786}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartCart.Identity.Api.IntegrationTests", "SmartCartMicroservices\tests\Services\Identity\SmartCart.Identity.Api.IntegrationTests\SmartCart.Identity.Api.IntegrationTests.csproj", "{B920382B-AC5C-4A45-8C7C-4CA2F87BD756}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartCart.Catalog.Application.Tests", "SmartCartMicroservices\tests\Services\Catalog\SmartCart.Catalog.Application.Tests\SmartCart.Catalog.Application.Tests.csproj", "{215750AA-8D8F-4E9B-B8E2-B59081D4E23B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartCart.Catalog.Api.IntegrationTests", "SmartCartMicroservices\tests\Services\Catalog\SmartCart.Catalog.Api.IntegrationTests\SmartCart.Catalog.Api.IntegrationTests.csproj", "{06CA9CB0-1457-4541-96D1-0DB613BCF3FD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartCart.Cart.Application.Tests", "SmartCartMicroservices\tests\Services\Cart\SmartCart.Cart.Application.Tests\SmartCart.Cart.Application.Tests.csproj", "{EB1ADD68-2164-4417-8F56-0F753C2088E4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartCart.Cart.Api.IntegrationTests", "SmartCartMicroservices\tests\Services\Cart\SmartCart.Cart.Api.IntegrationTests\SmartCart.Cart.Api.IntegrationTests.csproj", "{8F1D9547-95E4-4DE9-8E1D-B69A21EEBE5A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartCart.Orders.Application.Tests", "SmartCartMicroservices\tests\Services\Orders\SmartCart.Orders.Application.Tests\SmartCart.Orders.Application.Tests.csproj", "{82737E0E-B114-4EC7-B8C2-1008161365BD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartCart.Orders.Api.IntegrationTests", "SmartCartMicroservices\tests\Services\Orders\SmartCart.Orders.Api.IntegrationTests\SmartCart.Orders.Api.IntegrationTests.csproj", "{B0395454-0B43-4ECC-83C0-682F58800A2E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartCart.Inventory.Application.Tests", "SmartCartMicroservices\tests\Services\Inventory\SmartCart.Inventory.Application.Tests\SmartCart.Inventory.Application.Tests.csproj", "{0C42E0CA-09F4-45A3-AAC9-901956F72FA6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartCart.Inventory.Api.IntegrationTests", "SmartCartMicroservices\tests\Services\Inventory\SmartCart.Inventory.Api.IntegrationTests\SmartCart.Inventory.Api.IntegrationTests.csproj", "{D1CA8D40-FC2A-4F75-A49B-CAA7AC97D02C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartCart.Payments.Application.Tests", "SmartCartMicroservices\tests\Services\Payments\SmartCart.Payments.Application.Tests\SmartCart.Payments.Application.Tests.csproj", "{91567B87-6FFB-4328-A889-184EBB44CCCA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartCart.Payments.Api.IntegrationTests", "SmartCartMicroservices\tests\Services\Payments\SmartCart.Payments.Api.IntegrationTests\SmartCart.Payments.Api.IntegrationTests.csproj", "{E177F440-B3E4-45B5-BB1B-0D33DD62D0A5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartCart.Notifications.Application.Tests", "SmartCartMicroservices\tests\Services\Notifications\SmartCart.Notifications.Application.Tests\SmartCart.Notifications.Application.Tests.csproj", "{F85C1A4B-492F-42EA-BFD5-C42062B61A8D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartCart.Notifications.Worker.Tests", "SmartCartMicroservices\tests\Services\Notifications\SmartCart.Notifications.Worker.Tests\SmartCart.Notifications.Worker.Tests.csproj", "{E5B022A1-4B84-4DA4-94AF-8BD11EC8DB5D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -201,6 +229,62 @@ Global
 		{2A4E2DEB-B6E1-46B5-8EC6-250939F38AB5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2A4E2DEB-B6E1-46B5-8EC6-250939F38AB5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2A4E2DEB-B6E1-46B5-8EC6-250939F38AB5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CBDD36A2-6949-46E1-BEDA-654F51BAE786}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CBDD36A2-6949-46E1-BEDA-654F51BAE786}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CBDD36A2-6949-46E1-BEDA-654F51BAE786}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CBDD36A2-6949-46E1-BEDA-654F51BAE786}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B920382B-AC5C-4A45-8C7C-4CA2F87BD756}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B920382B-AC5C-4A45-8C7C-4CA2F87BD756}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B920382B-AC5C-4A45-8C7C-4CA2F87BD756}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B920382B-AC5C-4A45-8C7C-4CA2F87BD756}.Release|Any CPU.Build.0 = Release|Any CPU
+		{215750AA-8D8F-4E9B-B8E2-B59081D4E23B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{215750AA-8D8F-4E9B-B8E2-B59081D4E23B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{215750AA-8D8F-4E9B-B8E2-B59081D4E23B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{215750AA-8D8F-4E9B-B8E2-B59081D4E23B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{06CA9CB0-1457-4541-96D1-0DB613BCF3FD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{06CA9CB0-1457-4541-96D1-0DB613BCF3FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{06CA9CB0-1457-4541-96D1-0DB613BCF3FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{06CA9CB0-1457-4541-96D1-0DB613BCF3FD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EB1ADD68-2164-4417-8F56-0F753C2088E4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EB1ADD68-2164-4417-8F56-0F753C2088E4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EB1ADD68-2164-4417-8F56-0F753C2088E4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EB1ADD68-2164-4417-8F56-0F753C2088E4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8F1D9547-95E4-4DE9-8E1D-B69A21EEBE5A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8F1D9547-95E4-4DE9-8E1D-B69A21EEBE5A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8F1D9547-95E4-4DE9-8E1D-B69A21EEBE5A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8F1D9547-95E4-4DE9-8E1D-B69A21EEBE5A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{82737E0E-B114-4EC7-B8C2-1008161365BD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{82737E0E-B114-4EC7-B8C2-1008161365BD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{82737E0E-B114-4EC7-B8C2-1008161365BD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{82737E0E-B114-4EC7-B8C2-1008161365BD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B0395454-0B43-4ECC-83C0-682F58800A2E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B0395454-0B43-4ECC-83C0-682F58800A2E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B0395454-0B43-4ECC-83C0-682F58800A2E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B0395454-0B43-4ECC-83C0-682F58800A2E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0C42E0CA-09F4-45A3-AAC9-901956F72FA6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0C42E0CA-09F4-45A3-AAC9-901956F72FA6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0C42E0CA-09F4-45A3-AAC9-901956F72FA6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0C42E0CA-09F4-45A3-AAC9-901956F72FA6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D1CA8D40-FC2A-4F75-A49B-CAA7AC97D02C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D1CA8D40-FC2A-4F75-A49B-CAA7AC97D02C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D1CA8D40-FC2A-4F75-A49B-CAA7AC97D02C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D1CA8D40-FC2A-4F75-A49B-CAA7AC97D02C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{91567B87-6FFB-4328-A889-184EBB44CCCA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{91567B87-6FFB-4328-A889-184EBB44CCCA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{91567B87-6FFB-4328-A889-184EBB44CCCA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{91567B87-6FFB-4328-A889-184EBB44CCCA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E177F440-B3E4-45B5-BB1B-0D33DD62D0A5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E177F440-B3E4-45B5-BB1B-0D33DD62D0A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E177F440-B3E4-45B5-BB1B-0D33DD62D0A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E177F440-B3E4-45B5-BB1B-0D33DD62D0A5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F85C1A4B-492F-42EA-BFD5-C42062B61A8D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F85C1A4B-492F-42EA-BFD5-C42062B61A8D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F85C1A4B-492F-42EA-BFD5-C42062B61A8D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F85C1A4B-492F-42EA-BFD5-C42062B61A8D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E5B022A1-4B84-4DA4-94AF-8BD11EC8DB5D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E5B022A1-4B84-4DA4-94AF-8BD11EC8DB5D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E5B022A1-4B84-4DA4-94AF-8BD11EC8DB5D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E5B022A1-4B84-4DA4-94AF-8BD11EC8DB5D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

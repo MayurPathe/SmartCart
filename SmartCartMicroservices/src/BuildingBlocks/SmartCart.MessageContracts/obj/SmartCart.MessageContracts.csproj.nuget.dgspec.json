@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\hp\\source\\repos\\SmartCart\\SmartCartMicroservices\\src\\BuildingBlocks\\SmartCart.MessageContracts\\SmartCart.MessageContracts.csproj": {}
+    "C:\\Users\\hp\\Source\\Repos\\SmartCart\\SmartCartMicroservices\\src\\BuildingBlocks\\SmartCart.MessageContracts\\SmartCart.MessageContracts.csproj": {}
   },
   "projects": {
-    "C:\\Users\\hp\\source\\repos\\SmartCart\\SmartCartMicroservices\\src\\BuildingBlocks\\SmartCart.MessageContracts\\SmartCart.MessageContracts.csproj": {
+    "C:\\Users\\hp\\Source\\Repos\\SmartCart\\SmartCartMicroservices\\src\\BuildingBlocks\\SmartCart.MessageContracts\\SmartCart.MessageContracts.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\hp\\source\\repos\\SmartCart\\SmartCartMicroservices\\src\\BuildingBlocks\\SmartCart.MessageContracts\\SmartCart.MessageContracts.csproj",
+        "projectUniqueName": "C:\\Users\\hp\\Source\\Repos\\SmartCart\\SmartCartMicroservices\\src\\BuildingBlocks\\SmartCart.MessageContracts\\SmartCart.MessageContracts.csproj",
         "projectName": "SmartCart.MessageContracts",
-        "projectPath": "C:\\Users\\hp\\source\\repos\\SmartCart\\SmartCartMicroservices\\src\\BuildingBlocks\\SmartCart.MessageContracts\\SmartCart.MessageContracts.csproj",
+        "projectPath": "C:\\Users\\hp\\Source\\Repos\\SmartCart\\SmartCartMicroservices\\src\\BuildingBlocks\\SmartCart.MessageContracts\\SmartCart.MessageContracts.csproj",
         "packagesPath": "C:\\Users\\hp\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\hp\\source\\repos\\SmartCart\\SmartCartMicroservices\\src\\BuildingBlocks\\SmartCart.MessageContracts\\obj\\",
+        "outputPath": "C:\\Users\\hp\\Source\\Repos\\SmartCart\\SmartCartMicroservices\\src\\BuildingBlocks\\SmartCart.MessageContracts\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
