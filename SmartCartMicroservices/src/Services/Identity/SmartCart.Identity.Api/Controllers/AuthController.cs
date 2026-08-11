@@ -17,15 +17,22 @@ public class AuthController : ControllerBase
     private readonly RegisterUserCommandHandler _registerUserCommandHandler;
     private readonly LoginUserCommandHandler _loginUserCommandHandler;
     private readonly GetUserProfileQueryHandler _getUserProfileQueryHandler;
+    private readonly RefreshTokenCommandHandler _refreshTokenCommandHandler;
+    private readonly LogoutCommandHandler _logoutCommandHandler;
 
     public AuthController(
        RegisterUserCommandHandler registerUserCommandHandler,
        LoginUserCommandHandler loginUserCommandHandler,
-       GetUserProfileQueryHandler getUserProfileQueryHandler)
+       GetUserProfileQueryHandler getUserProfileQueryHandler,
+        LogoutCommandHandler logoutCommandHandler,
+        RefreshTokenCommandHandler refreshTokenCommandHandler)
+
     {
         _registerUserCommandHandler = registerUserCommandHandler;
         _loginUserCommandHandler = loginUserCommandHandler;
         _getUserProfileQueryHandler = getUserProfileQueryHandler;
+        _refreshTokenCommandHandler = refreshTokenCommandHandler;
+        _logoutCommandHandler = logoutCommandHandler;
     }
 
     [HttpPost("register")]
@@ -73,5 +80,37 @@ public class AuthController : ControllerBase
             new GetUserProfileQuery(userId));
 
         return Ok(result);
+    }
+
+    [HttpPost("refresh")]
+    public async Task<ActionResult<AuthResponseDto>> RefreshToken(
+    RefreshTokenRequestDto request)
+    {
+        var command = new RefreshTokenCommand
+        {
+            RefreshToken = request.RefreshToken
+        };
+
+        var result =
+            await _refreshTokenCommandHandler.HandleAsync(command);
+
+        return Ok(result);
+    }
+
+    [HttpPost("logout")]
+    public async Task<IActionResult> Logout(
+    LogoutRequestDto request)
+    {
+        var command = new LogoutCommand
+        {
+            RefreshToken = request.RefreshToken
+        };
+
+        await _logoutCommandHandler.HandleAsync(command);
+
+        return Ok(new
+        {
+            message = "Logout successful."
+        });
     }
 }

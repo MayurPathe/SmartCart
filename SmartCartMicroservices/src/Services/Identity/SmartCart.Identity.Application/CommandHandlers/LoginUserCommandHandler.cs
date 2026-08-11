@@ -41,6 +41,9 @@ public class LoginUserCommandHandler
             var errors = string.Join(", ", validationResult.Errors.Select(x => x.ErrorMessage));
             throw new ArgumentException(errors);
         }
+        var normalizedEmail =
+            command.Email.Trim().ToLowerInvariant();
+
 
         var user = await _userRepository.GetByEmailAsync(
             command.Email.Trim().ToLowerInvariant(),
@@ -69,10 +72,15 @@ public class LoginUserCommandHandler
             UserId = user.Id,
             Token = _jwtTokenService.GenerateRefreshToken(),
             ExpiresAt = DateTime.UtcNow.AddDays(7),
-            CreatedAt = DateTime.UtcNow
+            CreatedAt = DateTime.UtcNow,
+            IsRevoked = false
         };
 
-        user.RefreshTokens.Add(refreshToken);
+        //user.RefreshTokens.Add(refreshToken);
+        // 7. Explicitly INSERT refresh token
+        await _userRepository.AddRefreshTokenAsync(
+            refreshToken,
+            cancellationToken);
 
         await _userRepository.SaveChangesAsync(cancellationToken);
 

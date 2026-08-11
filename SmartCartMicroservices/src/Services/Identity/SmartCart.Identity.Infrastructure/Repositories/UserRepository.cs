@@ -21,16 +21,26 @@ public class UserRepository : IUserRepository
 
     public async Task<User?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
     {
+        //return await _dbContext.Users
+        //    .Include(x => x.RefreshTokens)
+        //    .FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
         return await _dbContext.Users
-            .Include(x => x.RefreshTokens)
-            .FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
+           .AsNoTracking()
+           .FirstOrDefaultAsync(
+               x => x.Id == id,
+               cancellationToken);
     }
 
     public async Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default)
     {
+        //return await _dbContext.Users
+        //    .Include(x => x.RefreshTokens)
+        //    .FirstOrDefaultAsync(x => x.Email == email, cancellationToken);
         return await _dbContext.Users
-            .Include(x => x.RefreshTokens)
-            .FirstOrDefaultAsync(x => x.Email == email, cancellationToken);
+           .AsNoTracking()
+           .FirstOrDefaultAsync(
+               x => x.Email == email,
+               cancellationToken);
     }
 
     public async Task<bool> EmailExistsAsync(string email, CancellationToken cancellationToken = default)
@@ -43,7 +53,19 @@ public class UserRepository : IUserRepository
     {
         await _dbContext.Users.AddAsync(user, cancellationToken);
     }
+    public async Task AddRefreshTokenAsync(RefreshToken refreshToken, CancellationToken cancellationToken = default)
+    {
+        await _dbContext.RefreshTokens.AddAsync(refreshToken, cancellationToken);
+    }
 
+    public async Task<RefreshToken?> GetRefreshTokenAsync(string token,CancellationToken cancellationToken = default)
+    {
+        return await _dbContext.RefreshTokens
+            .Include(x => x.User)
+            .FirstOrDefaultAsync(
+                x => x.Token == token,
+                cancellationToken);
+    }
     public async Task SaveChangesAsync(CancellationToken cancellationToken = default)
     {
         await _dbContext.SaveChangesAsync(cancellationToken);

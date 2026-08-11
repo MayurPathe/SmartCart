@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("SmartCart.ApiGateway")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+38c1756c97a7078e139c5c4b455b7ed5a746590d")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+7e091e796734be50f9c35cd08c9e1e829b16165f")]
 [assembly: System.Reflection.AssemblyProductAttribute("SmartCart.ApiGateway")]
 [assembly: System.Reflection.AssemblyTitleAttribute("SmartCart.ApiGateway")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
