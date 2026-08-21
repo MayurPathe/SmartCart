@@ -1,37 +1,48 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Hosting;
+﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.VisualStudio.TestPlatform.TestHost;
-using SmartCart.Identity.Infrastructure.Data;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using SmartCart.Identity.Infrastructure.Persistence;
 
 namespace SmartCart.Identity.Api.IntegrationTests;
 
-public class CustomWebApplicationFactory : WebApplicationFactory<Program>
+public class CustomWebApplicationFactory
+    : WebApplicationFactory<Program>
 {
-    protected override void ConfigureWebHost(IWebHostBuilder builder)
+    private const string TestConnectionString =
+        "Host=localhost;" +
+        "Port=5432;" +
+        "Database=identity_test_db;" +
+        "Username=postgres;" +
+        "Password=root";
+
+
+    protected override void ConfigureWebHost(
+        IWebHostBuilder builder)
     {
         builder.UseEnvironment("Testing");
 
-        builder.ConfigureServices(services =>
-        {
-            var dbContextDescriptor = services.SingleOrDefault(
-                d => d.ServiceType == typeof(DbContextOptions<IdentityDbContext>));
 
-            if (dbContextDescriptor != null)
+        builder.ConfigureServices(
+            services =>
             {
-                services.Remove(dbContextDescriptor);
-            }
+                // Remove existing DbContext registration.
+                services.RemoveAll<
+                    DbContextOptions<IdentityDbContext>>();
 
-            services.AddDbContext<IdentityDbContext>(options =>
-            {
-                options.UseInMemoryDatabase("identity_test_db");
+                services.RemoveAll<
+                    IdentityDbContext>();
+
+
+                // Register PostgreSQL test database.
+                services.AddDbContext<
+                    IdentityDbContext>(
+                    options =>
+                    {
+                        options.UseNpgsql(
+                            TestConnectionString);
+                    });
             });
-        });
     }
 }

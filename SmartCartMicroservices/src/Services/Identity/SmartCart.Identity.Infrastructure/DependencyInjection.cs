@@ -1,45 +1,52 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using SmartCart.Identity.Application.Interfaces;
-using SmartCart.Identity.Infrastructure.Data;
-using SmartCart.Identity.Infrastructure.Repositories;
-using SmartCart.Identity.Infrastructure.Services;
+using SmartCart.Identity.Application.Abstractions.Persistence;
+using SmartCart.Identity.Application.Abstractions.Security;
+using SmartCart.Identity.Infrastructure.Persistence;
+using SmartCart.Identity.Infrastructure.Persistence.Repositories;
+using SmartCart.Identity.Infrastructure.Security;
 
 namespace SmartCart.Identity.Infrastructure;
 
 public static class DependencyInjection
 {
-    public static IServiceCollection AddIdentityInfrastructure(
-        this IServiceCollection services,
-        IConfiguration configuration)
+    public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
-        //services.Configure<JwtOptions>(configuration.GetSection("Jwt"));
-        services.Configure<JwtOptions>(options =>
-        {
-            options.Issuer = configuration["Jwt:Issuer"] ?? string.Empty;
-            options.Audience = configuration["Jwt:Audience"] ?? string.Empty;
-            options.SecretKey = configuration["Jwt:SecretKey"] ?? string.Empty;
+        var connectionString = configuration.GetConnectionString("IdentityDatabase");
 
-            var expiryValue = configuration["Jwt:ExpiryMinutes"];
-            options.ExpiryMinutes = int.TryParse(expiryValue, out var expiryMinutes)
-                ? expiryMinutes
-                : 60;
-        });
+        services.AddDbContext<IdentityDbContext>(
+            options =>
+                options.UseNpgsql(
+                    connectionString));
 
-        services.AddDbContext<IdentityDbContext>(options =>
-        {
-            options.UseNpgsql(configuration.GetConnectionString("IdentityDb"));
-        });
+        services.Configure<JwtSettings>(
+            configuration.GetSection(
+                JwtSettings.SectionName));
 
         services.AddScoped<IUserRepository, UserRepository>();
-        services.AddScoped<IPasswordHasher, PasswordHasher>();
-        services.AddScoped<IJwtTokenService, JwtTokenService>();
+
+        services.AddScoped<IRoleRepository, RoleRepository>();
+
+        services.AddScoped<
+            IRefreshTokenRepository,
+            RefreshTokenRepository>();
+
+        services.AddScoped<
+            ILoginAuditRepository,
+            LoginAuditRepository>();
+
+        services.AddScoped<
+            IUnitOfWork,
+            UnitOfWork>();
+
+        services.AddScoped<
+            IPasswordService,
+            PasswordService>();
+
+        services.AddScoped<
+            IJwtTokenService,
+            JwtTokenService>();
 
         return services;
     }

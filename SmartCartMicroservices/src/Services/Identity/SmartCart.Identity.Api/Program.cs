@@ -1,125 +1,165 @@
 using System.Text;
-using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using SmartCart.Identity.Application.CommandHandlers;
-using SmartCart.Identity.Application.Commands;
-using SmartCart.Identity.Application.QueryHandlers;
-using SmartCart.Identity.Application.Validators;
+using SmartCart.Identity.Api.Middleware;
+using SmartCart.Identity.Application;
 using SmartCart.Identity.Infrastructure;
-using Microsoft.EntityFrameworkCore;
-using SmartCart.Identity.Infrastructure.Data;
+using SmartCart.Identity.Infrastructure.Persistence;
+using SmartCart.Identity.Infrastructure.Persistence.Seed;
+using SmartCart.Identity.Infrastructure.Security;
 
-var builder = WebApplication.CreateBuilder(args);
-
-// Add services to the container.
+var builder =
+    WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddIdentityInfrastructure(builder.Configuration);
 
-builder.Services.AddScoped<IValidator<RegisterUserCommand>, RegisterUserValidator>();
-builder.Services.AddScoped<IValidator<LoginUserCommand>, LoginUserValidator>();
+builder.Services.AddEndpointsApiExplorer();
 
-builder.Services.AddScoped<RegisterUserCommandHandler>();
-builder.Services.AddScoped<LoginUserCommandHandler>();
-builder.Services.AddScoped<GetUserProfileQueryHandler>();
-builder.Services.AddScoped<RefreshTokenCommandHandler>();
-builder.Services.AddScoped<LogoutCommandHandler>();
+builder.Services.AddApplication();
 
-var jwtSecretKey = builder.Configuration["Jwt:SecretKey"];
-var jwtIssuer = builder.Configuration["Jwt:Issuer"];
-var jwtAudience = builder.Configuration["Jwt:Audience"];
+builder.Services.AddInfrastructure(
+    builder.Configuration);
 
-    builder.Services
-    .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(options =>
-    {
-        options.RequireHttpsMetadata = false;
+var jwtSettings =
+    builder.Configuration
+        .GetSection(JwtSettings.SectionName)
+        .Get<JwtSettings>()
+    ?? throw new InvalidOperationException(
+        "JWT configuration is missing.");
 
-        options.TokenValidationParameters = new TokenValidationParameters
+builder.Services
+    .AddAuthentication(
+        options =>
         {
-            ValidateIssuer = true,
-            ValidIssuer = jwtIssuer,
+            options.DefaultAuthenticateScheme =
+                JwtBearerDefaults.AuthenticationScheme;
 
-            ValidateAudience = true,
-            ValidAudience = jwtAudience,
-
-            ValidateIssuerSigningKey = true,
-            IssuerSigningKey = new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes(jwtSecretKey!)),
-
-            ValidateLifetime = true,
-            ClockSkew = TimeSpan.Zero
-        };
-    });
-
-    builder.Services.AddAuthorization();
-
-    builder.Services.AddEndpointsApiExplorer();
-    builder.Services.AddSwaggerGen(options =>
-    {
-        options.SwaggerDoc("v1", new OpenApiInfo
+            options.DefaultChallengeScheme =
+                JwtBearerDefaults.AuthenticationScheme;
+        })
+    .AddJwtBearer(
+        options =>
         {
-            Title = "SmartCart Identity API",
-            Version = "v1"
-        });
-
-        options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-        {
-            Description = "Enter JWT token like this: Bearer your-token",
-            Name = "Authorization",
-            In = ParameterLocation.Header,
-            Type = SecuritySchemeType.ApiKey,
-            Scheme = "Bearer"
-        });
-
-        options.AddSecurityRequirement(new OpenApiSecurityRequirement
-        {
-            {
-                new OpenApiSecurityScheme
+            options.TokenValidationParameters =
+                new TokenValidationParameters
                 {
-                    Reference = new OpenApiReference
-                    {
-                        Id = "Bearer",
-                        Type = ReferenceType.SecurityScheme
-                    }
-                },
-                Array.Empty<string>()
-            }
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+
+                    ValidIssuer =
+                        jwtSettings.Issuer,
+
+                    ValidAudience =
+                        jwtSettings.Audience,
+
+                    IssuerSigningKey =
+                        new SymmetricSecurityKey(
+                            Encoding.UTF8.GetBytes(
+                                jwtSettings.Key)),
+
+                    ClockSkew = TimeSpan.Zero
+                };
         });
+
+builder.Services.AddAuthorization();
+
+builder.Services.AddSwaggerGen(
+    options =>
+    {
+        options.SwaggerDoc(
+            "v1",
+            new OpenApiInfo
+            {
+                Title =
+                    "SmartCart Identity API",
+                Version = "v1"
+            });
+
+        options.AddSecurityDefinition(
+            "Bearer",
+            new OpenApiSecurityScheme
+            {
+                Name = "Authorization",
+                Type = SecuritySchemeType.Http,
+                Scheme = "bearer",
+                BearerFormat = "JWT",
+                In = ParameterLocation.Header,
+                Description =
+                    "Enter JWT access token."
+            });
+
+        options.AddSecurityRequirement(
+            new OpenApiSecurityRequirement
+            {
+                {
+                    new OpenApiSecurityScheme
+                    {
+                        Reference =
+                            new OpenApiReference
+                            {
+                                Type =
+                                    ReferenceType
+                                        .SecurityScheme,
+
+                                Id = "Bearer"
+                            }
+                    },
+                    Array.Empty<string>()
+                }
+            });
     });
 
-    var app = builder.Build();
+var app = builder.Build();
 
+app.UseMiddleware<
+    ExceptionHandlingMiddleware>();
 
-    // Configure the HTTP request pipeline.
-    //if (app.Environment.IsDevelopment())
-    //{
-    //    app.UseSwagger();
-    //    app.UseSwaggerUI();
-    //}
-
-
-    var autoMigrate = builder.Configuration.GetValue<bool>("DatabaseSettings:AutoMigrate");
-
-    if (autoMigrate)
-    {
-        using var scope = app.Services.CreateScope();
-
-        var dbContext = scope.ServiceProvider.GetRequiredService<IdentityDbContext>();
-
-        dbContext.Database.Migrate();
-    }
-
+if (app.Environment.IsDevelopment())
+{
     app.UseSwagger();
     app.UseSwaggerUI();
+}
 
-    app.UseHttpsRedirection();
+app.UseHttpsRedirection();
 
-    app.UseAuthorization();
+app.UseAuthentication();
 
-    app.MapControllers();
+app.UseAuthorization();
 
-    app.Run();
+app.MapControllers();
+
+//using (var scope =
+//       app.Services.CreateScope())
+//{
+//    var dbContext =
+//        scope.ServiceProvider
+//            .GetRequiredService<IdentityDbContext>();
+
+//    await dbContext.Database.MigrateAsync();
+
+//    await IdentityDbSeeder.SeedAsync(
+//        dbContext);
+//}
+if (!app.Environment.IsEnvironment("Testing"))
+{
+    using var scope = app.Services.CreateScope();
+
+    var dbContext =
+        scope.ServiceProvider
+            .GetRequiredService<IdentityDbContext>();
+
+    //await dbContext.Database.MigrateAsync();
+
+    await IdentityDbSeeder.SeedAsync(
+        dbContext);
+}
+
+app.Run();
+
+public partial class Program
+{
+}

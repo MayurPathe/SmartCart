@@ -1,116 +1,128 @@
-﻿using Microsoft.AspNetCore.Http;
-using System.Security.Claims;
+﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using SmartCart.Identity.Application.Commands;
-using SmartCart.Identity.Application.CommandHandlers;
-using SmartCart.Identity.Application.DTOs;
-using SmartCart.Identity.Application.Queries;
-using SmartCart.Identity.Application.QueryHandlers;
+using SmartCart.Identity.Application.Features.Auth.Commands.Login;
+using SmartCart.Identity.Application.Features.Auth.Commands.Logout;
+using SmartCart.Identity.Application.Features.Auth.Commands.RefreshToken;
+using SmartCart.Identity.Application.Features.Auth.Commands.Register;
+using SmartCart.Identity.Application.Features.Auth.Queries;
+using System.Security.Claims;
 
 namespace SmartCart.Identity.Api.Controllers;
 
-[Route("api/auth")]
 [ApiController]
+[Route("api/auth")]
 public class AuthController : ControllerBase
 {
-    private readonly RegisterUserCommandHandler _registerUserCommandHandler;
-    private readonly LoginUserCommandHandler _loginUserCommandHandler;
-    private readonly GetUserProfileQueryHandler _getUserProfileQueryHandler;
-    private readonly RefreshTokenCommandHandler _refreshTokenCommandHandler;
-    private readonly LogoutCommandHandler _logoutCommandHandler;
+    private readonly ISender _sender;
 
-    public AuthController(
-       RegisterUserCommandHandler registerUserCommandHandler,
-       LoginUserCommandHandler loginUserCommandHandler,
-       GetUserProfileQueryHandler getUserProfileQueryHandler,
-        LogoutCommandHandler logoutCommandHandler,
-        RefreshTokenCommandHandler refreshTokenCommandHandler)
-
+    public AuthController(ISender sender)
     {
-        _registerUserCommandHandler = registerUserCommandHandler;
-        _loginUserCommandHandler = loginUserCommandHandler;
-        _getUserProfileQueryHandler = getUserProfileQueryHandler;
-        _refreshTokenCommandHandler = refreshTokenCommandHandler;
-        _logoutCommandHandler = logoutCommandHandler;
+        _sender = sender;
     }
 
     [HttpPost("register")]
-    public async Task<ActionResult<AuthResponseDto>> Register(RegisterRequestDto request)
+    [AllowAnonymous]
+    public async Task<IActionResult> Register(
+        RegisterUserCommand command,
+        CancellationToken cancellationToken)
     {
-        var command = new RegisterUserCommand
-        {
-            FullName = request.FullName,
-            Email = request.Email,
-            Password = request.Password,
-            PhoneNumber = request.PhoneNumber
-        };
-
-        var result = await _registerUserCommandHandler.HandleAsync(command);
+        var result =
+            await _sender.Send(
+                command,
+                cancellationToken);
 
         return Ok(result);
     }
+
     [HttpPost("login")]
-    public async Task<ActionResult<AuthResponseDto>> Login(LoginRequestDto request)
+    [AllowAnonymous]
+    public async Task<IActionResult> Login(
+        LoginRequest request,
+        CancellationToken cancellationToken)
     {
-        var command = new LoginUserCommand
-        {
-            Email = request.Email,
-            Password = request.Password
-        };
+        var command =
+            new LoginUserCommand(
+                request.Email,
+                request.Password,
+                HttpContext.Connection
+                    .RemoteIpAddress?
+                    .ToString(),
+                Request.Headers.UserAgent.ToString());
 
-        var result = await _loginUserCommandHandler.HandleAsync(command);
+        var result =
+            await _sender.Send(
+                command,
+                cancellationToken);
 
         return Ok(result);
     }
+
     [Authorize]
     [HttpGet("profile")]
-    public async Task<ActionResult<UserProfileDto>> Profile()
+    public async Task<IActionResult> GetProfile(
+        CancellationToken cancellationToken)
     {
-        var userIdValue = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        var userIdValue =
+            User.FindFirstValue(
+                ClaimTypes.NameIdentifier);
 
-        if (string.IsNullOrWhiteSpace(userIdValue))
+        if (!Guid.TryParse(
+                userIdValue,
+                out var userId))
         {
             return Unauthorized();
         }
 
-        var userId = Guid.Parse(userIdValue);
-
-        var result = await _getUserProfileQueryHandler.HandleAsync(
-            new GetUserProfileQuery(userId));
-
-        return Ok(result);
-    }
-
-    [HttpPost("refresh")]
-    public async Task<ActionResult<AuthResponseDto>> RefreshToken(
-    RefreshTokenRequestDto request)
-    {
-        var command = new RefreshTokenCommand
-        {
-            RefreshToken = request.RefreshToken
-        };
-
         var result =
-            await _refreshTokenCommandHandler.HandleAsync(command);
+            await _sender.Send(
+                new GetProfileQuery(userId),
+                cancellationToken);
 
         return Ok(result);
     }
 
+    [HttpPost("refresh-token")]
+    [AllowAnonymous]
+    public async Task<IActionResult> RefreshToken(
+        RefreshTokenRequest request,
+        CancellationToken cancellationToken)
+    {
+        var result =
+            await _sender.Send(
+                new RefreshTokenCommand(
+                    request.RefreshToken),
+                cancellationToken);
+
+        return Ok(result);
+    }
+
+    [Authorize]
     [HttpPost("logout")]
     public async Task<IActionResult> Logout(
-    LogoutRequestDto request)
+        LogoutRequest request,
+        CancellationToken cancellationToken)
     {
-        var command = new LogoutCommand
-        {
-            RefreshToken = request.RefreshToken
-        };
+        await _sender.Send(
+            new LogoutCommand(
+                request.RefreshToken),
+            cancellationToken);
 
-        await _logoutCommandHandler.HandleAsync(command);
-
-        return Ok(new
-        {
-            message = "Logout successful."
-        });
+        return Ok(
+            new
+            {
+                message =
+                    "Logout successful."
+            });
     }
 }
+
+public record LoginRequest(
+    string Email,
+    string Password);
+
+public record RefreshTokenRequest(
+    string RefreshToken);
+
+public record LogoutRequest(
+    string RefreshToken);

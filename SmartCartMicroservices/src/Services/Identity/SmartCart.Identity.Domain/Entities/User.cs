@@ -4,26 +4,34 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SmartCart.Identity.Domain.Entities
+namespace SmartCart.Identity.Domain.Entities;
+
+public class User
 {
-    public class User
-    {
-        public Guid Id { get; set; } = Guid.NewGuid();
+    public Guid Id { get; set; }
 
-        public string FullName { get; set; } = string.Empty;
+    public string FullName { get; set; } = string.Empty;
 
-        public string Email { get; set; } = string.Empty;
+    public string Email { get; set; } = string.Empty;
 
-        public string PasswordHash { get; set; } = string.Empty;
+    public string NormalizedEmail { get; set; } = string.Empty;
 
-        public string? PhoneNumber { get; set; }
+    public string PasswordHash { get; set; } = string.Empty;
 
-        public bool IsActive { get; set; } = true;
+    public string? PhoneNumber { get; set; }
 
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    public bool IsActive { get; set; } = true;
 
-        public DateTime? UpdatedAt { get; set; }
+    public DateTime CreatedAt { get; set; }
 
-        public ICollection<RefreshToken> RefreshTokens { get; set; } = new List<RefreshToken>();
-    }
+    public DateTime? UpdatedAt { get; set; }
+
+    public ICollection<UserRole> UserRoles { get; set; }
+        = new List<UserRole>();
+
+    public ICollection<RefreshToken> RefreshTokens { get; set; }
+        = new List<RefreshToken>();
+
+    public ICollection<UserLoginAudit> LoginAudits { get; set; }
+        = new List<UserLoginAudit>();
 }
