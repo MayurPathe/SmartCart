@@ -1,11 +1,13 @@
 ﻿using System.Net;
 using System.Net.Http.Json;
+
 using FluentAssertions;
 using SmartCart.Identity.Application.DTOs;
 
 namespace SmartCart.Identity.Api.IntegrationTests.Auth;
 
-public class LoginIntegrationTests : IntegrationTestBase
+public class LoginIntegrationTests
+    : IntegrationTestBase
 {
     public LoginIntegrationTests(
         CustomWebApplicationFactory factory)

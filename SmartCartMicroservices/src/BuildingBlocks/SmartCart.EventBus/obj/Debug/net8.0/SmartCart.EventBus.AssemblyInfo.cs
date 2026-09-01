@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("SmartCart.EventBus")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+118412bfda3cb425c419717d8877335a09773f23")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+d3088b4d7b80610eb3c2d5c53dc16e75a432b0c7")]
 [assembly: System.Reflection.AssemblyProductAttribute("SmartCart.EventBus")]
 [assembly: System.Reflection.AssemblyTitleAttribute("SmartCart.EventBus")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

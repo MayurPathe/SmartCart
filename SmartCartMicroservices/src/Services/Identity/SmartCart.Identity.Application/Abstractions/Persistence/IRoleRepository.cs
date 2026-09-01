@@ -9,7 +9,5 @@ namespace SmartCart.Identity.Application.Abstractions.Persistence;
 
 public interface IRoleRepository
 {
-    Task<Role?> GetByNameAsync(
-        string normalizedRoleName,
-        CancellationToken cancellationToken);
+    Task<Role?> GetByNameAsync(string normalizedRoleName,CancellationToken cancellationToken);
 }
